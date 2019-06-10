@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Sprite Test</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <style>
+       img { 
+            image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
+            image-rendering: -moz-crisp-edges;          /* Firefox                        */
+            image-rendering: -o-crisp-edges;            /* Opera                          */
+            image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
+            image-rendering: pixelated; /* Chrome */
+            image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
+            -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
+        }
+        .grid {
+            display: flex;
+        }
+        .col {
+            background-image: url('light-screen.jpg');
+            background-size: contain; 
+            flex: 1;
+            text-align: center;
+            justify-content: center;
+            display: flex;
+            border: 20px solid #FFF;
+            padding: 80px 20px;
+        }
+        .dark, 
+        .dark .col { 
+            background-image: url('dark-screen.jpg') !important;
+            background-size: contain;    
+        }
+        .frame {
+            width: 32px;
+            height: 64px;
+            transform: scale(3);
+        }
+
+        .back, .left, .right, .front, .full {
+            background-image: url('enemies/ghost-sprites.png');
+        }
+
+        .full  { background-position: 0px 0px;    }
+
+        /* Animation */
+        :root{
+            --animation-time: 1s;
+        }
+
+            @keyframes front {
+                0%    { background-position: 0px 0px; }
+                100%  { background-position: 224px 0px; }
+            }
+            .front {  animation: var(--animation-time) front infinite steps(7, end); }
+            
+            @keyframes back {
+                0%    { background-position: 0px -64px; }
+                100%  { background-position: 224px -64px; }
+            }
+            .back { animation: var(--animation-time) back infinite steps(7, end); }
+            
+            @keyframes left {
+                0%    { background-position: 0px -128px; }
+                100%  { background-position: 224px -128px; }
+            }
+            .left { animation: var(--animation-time) left infinite steps(7, end); }
+            
+            @keyframes right {
+                0%    { background-position: 0px -192px; }
+                100%  { background-position: 224px -192px; }
+            }
+            .right { animation: var(--animation-time) right infinite steps(7, end); }
+
+            @keyframes full {
+                0%   { background-position: 0px 0px; }
+                24.9%  { background-position: 224px 0px; }
+                25%  { background-position: 0px -64px; }
+                49.9%  { background-position: 224px -64px; }
+                50%  { background-position: 0px -128px; }
+                74.9%  { background-position: 224px -128px; }
+                75%  { background-position: 0px -192px; }
+                100% { background-position: 224px -192px; }
+            }
+            .full {  animation: 4s full infinite steps(7, end); }
+
+    </style>
+</head>
+<body>
+
+    <div class="grid">
+        <div class="col">
+            <div class="front frame"></div>
+        </div>
+        <div class="col">
+            <div class="back frame"></div>
+        </div>
+        <div class="col">
+            <div class="left frame"></div>
+        </div>
+        <div class="col">
+            <div class="right frame"></div>
+        </div>
+    </div>
+    
+    <div class="grid dark">
+        <div class="col">
+            <div class="front frame"></div>
+        </div>
+        <div class="col">
+            <div class="back frame"></div>
+        </div>
+        <div class="col">
+            <div class="left frame"></div>
+        </div>
+        <div class="col">
+            <div class="right frame"></div>
+        </div>
+    </div>
+    
+    <div class="grid">
+        <div class="col">
+            <div class="full frame"></div>
+        </div>
+        <div class="col dark">
+            <div class="full frame"></div>
+        </div>
+    </div>
+
+</body>
+</html>
