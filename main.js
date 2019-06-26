@@ -7,7 +7,7 @@ var config = {
   physics: {
     default: 'arcade',
     arcade: {
-      gravity: { y: 200 }
+      gravity: { y: 500 }
     }
   },
   scene: {
@@ -32,7 +32,7 @@ function create () {
   var particles = this.add.particles('red');
 
   var emitter = particles.createEmitter({
-    speed: 60,
+    speed: 100,
     scale: { start: 0.5, end: 0 },
     blendMode: 'ADD'
   });
