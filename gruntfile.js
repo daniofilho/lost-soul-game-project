@@ -20,11 +20,11 @@ module.exports = function(grunt) {
             },
             build: {
                 src: [
-                    //'client/assets/**/*.js',
-                    //'client/gameProperties.js',
-                    'main.js' 
+                    //'source/assets/**/*.js',
+                    //'source/gameProperties.js',
+                    'source/main.js' 
                 ],
-                dest: 'bundle.js'
+                dest: 'source/bundle.js'
             }
         },
 
@@ -34,7 +34,7 @@ module.exports = function(grunt) {
                 options: {
                     hostname: "*",
                     port: 9001,
-                    base: '',
+                    base: 'source/',
                     livereload: true
                 }
             }
@@ -46,15 +46,15 @@ module.exports = function(grunt) {
             },
             includes: {
                 files: [
-                    'main.css',
-                    '*.html', 
-                    '**/*.html', 
-                    '*.html', 
-                    'assets/**/*.js', 
-                    'assets/**/*.json', 
-                    'engine/**/*.js', 
-                    'main.js', 
-                    'gameProperties.js', 
+                    'source/main.css',
+                    'source/*.html', 
+                    'source/**/*.html', 
+                    'source/*.html', 
+                    'source/assets/**/*.js', 
+                    'source/assets/**/*.json', 
+                    'source/engine/**/*.js', 
+                    'source/main.js', 
+                    'source/gameProperties.js', 
                 ],
                 tasks: ['browserify']
             },
