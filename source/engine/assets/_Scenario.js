@@ -1,13 +1,11 @@
 class _Scenario {
 
-  constructor(ctx, canvas, scenario_id, soundSrc){
-    this.ctx = ctx;
-    this.canvas = canvas;
-        
+  constructor(scenario_id, soundSrc){
+    
     this.renderItems = new Array();
         
-    this.width = canvas.width;
-    this.height = canvas.height;
+    this.width = window.game.getCanvasWidth();
+    this.height = window.game.getCanvasHeight();
     
     this.playerStartX = 0; 
     this.playerStartY = 0; 
@@ -43,9 +41,6 @@ class _Scenario {
   }
 
   // # Gets
-  getCtx() { return this.ctx; }
-  getCanvas() { return this.canvas; }	
-
   getId() { return this.scenario_id; }
   getActualStageId() { return this.stageId; }
               

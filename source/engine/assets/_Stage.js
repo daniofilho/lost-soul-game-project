@@ -218,10 +218,18 @@ class _Stage {
     });
   }
 
+  proccessStageAssets() {
+    this.renderItems.map( (item) => {
+      console.log( item );
+    });
+  }
+
   run () {  
     this.calculateStageCoordinates();
     this.loadJSON();
     this.loadStageItems();
+
+    this.proccessStageAssets();
   }
 
 } // class

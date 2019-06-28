@@ -232,14 +232,9 @@ class Game {
     this.refreshVariables();
     
     // # Init
-      
-      let canvasStatic = document.getElementById('canvas_static');
-      let contextStatic = canvasStatic.getContext('2d');
-
-      canvasStatic.width = this.gameProps.getProp('canvasWidth');
-      canvasStatic.height = this.gameProps.getProp('canvasHeight');
-
+  
     // # Players
+    /*
       this.players = new Array();
 
       if( ! saveData ) {
@@ -255,13 +250,14 @@ class Game {
           this.players.push( _player);
         });  
       }
+      */
     
     // # Scenario
     
       if( ! saveData ) {
-        this.scenario = this.getScenario( this.defaultScenario, contextStatic, canvasStatic );
+        this.scenario = this.getScenario( this.defaultScenario );
       } else {
-        this.scenario = this.getScenario( saveData.scenario.scenarioId, contextStatic, canvasStatic, saveData );
+        this.scenario = this.getScenario( saveData.scenario.scenarioId, saveData );
       }
 
       this.scenarioSound = this.scenario.getScenarioSound();
@@ -296,35 +292,29 @@ class Game {
 
     // # UI
       
-      this.UI = new UI( this.players, this.gameProps);
+      //this.UI = new UI( this.players, this.gameProps);
 
     // # Collision detection class
 
-      this.collision = new Collision( canvasStatic.width, canvasStatic.height );
+      this.collision = new Collision( this.gameProps.canvasWidth,  this.gameProps.canvasHeight );
 
     // # Render
 
-      this.renderStatic = new Render(contextStatic, canvasStatic); // Render executed only once
+      /*this.renderStatic = new Render(); // Render executed only once
 
       // Add items to be rendered
       this.renderStatic.setScenario(this.scenario); // set the scenario
-
       this.renderStatic.addArrayItem(this.scenario.getStaticItems());
-      
-      this.renderStatic.start();
+      this.renderStatic.start();*/
     
     // Hide Elements
-      document.getElementById("mainMenu").classList.remove('show');
       this.loading(false);
 
-    // Show Canvas
-      document.getElementById('gameCanvas').classList.add('show');
-    
     // Make sure the game is not paused
       this.unpause();
     
     // Scenario sound
-      this.scenarioSound.play();
+      //this.scenarioSound.play();
 
     // Flag 
       this.gameIsLoaded = true;
@@ -401,7 +391,7 @@ class Game {
 
     }
 
-    getScenario( scenario_id, contextStatic, canvasStatic, saveData ) {
+    getScenario( scenario_id, saveData ) {
 
       // ItemsState
       if( saveData ) {
@@ -412,10 +402,10 @@ class Game {
 
       switch(scenario_id) {
         case "prototype":
-          return new scenarioPrototype(contextStatic, canvasStatic, saveData );
+          return new scenarioPrototype(saveData);
           break;
         case "sandbox":
-          return new scenarioSandbox(contextStatic, canvasStatic, saveData );
+          return new scenarioSandbox(saveData);
           break;
       }
 
@@ -633,8 +623,6 @@ class Game {
     this.phaserScene = phaserScene;
 
     // Hide Elements
-    document.getElementById('mainMenu').classList.remove('show');
-    document.getElementById('gameCanvas').classList.remove('show');
     this.loading(false);
     this.gameOver(false);
 
