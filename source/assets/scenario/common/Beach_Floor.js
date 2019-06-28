@@ -29,6 +29,8 @@ class Beach_Floor extends _Collidable {
     
     super(props, position, dimension, sprite, events);
     
+    this.group = "ground";
+
   }
 
   // # Sprites  

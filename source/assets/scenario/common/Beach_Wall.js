@@ -29,6 +29,7 @@ class Beach_wall extends _Collidable {
     
     super(props, position, dimension, sprite, events);
 
+    this.group = "wall";
   }
 
   // # Sprites

@@ -154,10 +154,11 @@ class _Collidable {
     }
 
     // Phaser
+    /*
     window.game.phaserScene.add.sprite(this.getX(), this.getY(), this.sprite.getSprite().id )
       .setOrigin(0,0)
       .setFrame( this.sprite.getSpriteIndex() - 1 ); //
-      //.setScale( this.sprite.getScaleFactor() );
+      //.setScale( this.sprite.getScaleFactor() );*/
 
     /* - - */
       

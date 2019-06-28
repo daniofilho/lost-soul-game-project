@@ -35,6 +35,8 @@ class Heal extends _CanCollect {
     super(props, position, dimension, sprite, events, canCollectProps);
 
     this.handleProps();
+
+    this.group = "item-not-wall";
   }
 
   // Check if this item has some save state
