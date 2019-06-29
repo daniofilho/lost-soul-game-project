@@ -1,15 +1,13 @@
 const gameProperties = require('../../gameProperties');
-const scenarioPrototype = require('../../assets/scenario/Prototype/scenarioPrototype');
-const scenarioSandbox = require('../../assets/scenario/Sandbox/scenarioSandbox');
-const Player = require('../../assets/Player');
-const Collision = require('./Collision');
-const Render = require('./Render');
-const UI = require('../ui/UI');
+const scenarioMain = require('../../assets/scenario/scenarioMain');
 const GlobalAssets = require('../assets/GlobalAssets');
+const Phaser = require('phaser');
 
-class Game {
+class Game extends Phaser.Scene {
 
   constructor() {
+
+    super( {key: 'game', active: true } );
 
     this.phaser = null;
     this.phaserScene = null;
@@ -23,6 +21,7 @@ class Game {
     // Events
     this.keysDown = {};
     this.keysPress = {};
+    this.cursors = null;
 
     // Pause
     this._pause = false;
@@ -34,8 +33,9 @@ class Game {
     // Game
     this.gameProps = new gameProperties();
     this.players = new Array();
+    this.player = null;
     this.collision = null;
-    this.defaultScenario = 'sandbox';
+    this.defaultScenario = 'main';
     this.scenario = null;
     this.UI = null;
     this.currentStageName = '';
@@ -70,12 +70,44 @@ class Game {
 
     this.scenarioSound = false;
 
+    // Groups
+    this.floorGroup = null;
+    this.wallGroup = null;
+
     this.initSound();
   }
 
-  setPhaser(phaser) {
-    this.phaser = phaser;
-  }
+  /* Phaser */
+
+    preload() {
+      
+      this.load.spritesheet('player', 
+        'assets/player-sprite.png',
+        { frameWidth: 32, frameHeight: 64 }
+      );
+      
+      this.load.spritesheet('scenario', 
+        'assets/scenario/sprites/tilesetScenario.png',
+        { frameWidth: 32, frameHeight: 32 }
+      );
+
+    }
+
+    create(){
+      // Grupos
+      this.floorGroup = this.physics.add.staticGroup();
+      this.wallGroup = this.physics.add.staticGroup();
+
+      // Starta
+      this.phaserScene = this;
+      this.run('new');
+    }
+
+    update() {
+      this.updateGame();
+    }
+
+  /* - - */
 
   initSound() {
     this.menuSound = new Howl({
@@ -97,6 +129,10 @@ class Game {
     this.scenarioSound.volume(0.2);
     this.successSound.play();
     this.successSound.on('end', () => { this.scenarioSound.volume(0.6); });
+  }
+
+  resetGroups() {
+    // limpa os grupos existentes
   }
 
   // Gets
@@ -215,7 +251,7 @@ class Game {
 
     this.players = new Array();
     this.collision = null;
-    this.defaultScenario = 'sandbox';
+    this.defaultScenario = 'main';
     this.scenario = null;
     this.UI = null;
     this.currentStageName = '';
@@ -228,60 +264,29 @@ class Game {
   }
 
   startNewGame( saveData ) {
-
+    
     this.refreshVariables();
-    
-    // # Init
-      
-      let canvasStatic = document.getElementById('canvas_static');
-      let contextStatic = canvasStatic.getContext('2d');
-
-      canvasStatic.width = this.gameProps.getProp('canvasWidth');
-      canvasStatic.height = this.gameProps.getProp('canvasHeight');
-
-    // # Players
-      this.players = new Array();
-
-      if( ! saveData ) {
-        let player = new Player( this.gameProps, 1 ); 
-        this.players.push(player);
-        if ( this.multiplayer ) {
-          let player2 = new Player( this.gameProps, 2 ); 
-          this.players.push(player2);
-        }
-      } else {
-        saveData.players.map( (player) => {
-          let _player = new Player( this.gameProps, player.playerNumber, player ); 
-          this.players.push( _player);
-        });  
-      }
-    
+   
     // # Scenario
     
       if( ! saveData ) {
-        this.scenario = this.getScenario( this.defaultScenario, contextStatic, canvasStatic );
+        this.scenario = this.getScenario( this.defaultScenario);
       } else {
-        this.scenario = this.getScenario( saveData.scenario.scenarioId, contextStatic, canvasStatic, saveData );
+        this.scenario = this.getScenario( saveData.scenario.scenarioId, saveData );
       }
-
+      
       this.scenarioSound = this.scenario.getScenarioSound();
+
+    // # Players
+
+      this.player = this.scenario.getPlayer();
 
       // Set player X and Y
       if( ! saveData ) {
-        let i = 1;
-        this.players.map( (player) => {
-          switch(i){
-            case 1:
-              player.setStartPosition( this.scenario.getPlayer1StartX(), this.scenario.getPlayer1StartY() );
-              break;
-            case 2:
-              player.setStartPosition( this.scenario.getPlayer2StartX(), this.scenario.getPlayer2StartY() );
-              break;
-          }
-          i++;
-        });
+        this.player.setStartPosition( this.scenario.getPlayerStartX(), this.scenario.getPlayerStartY() );
       } else {
-        saveData.players.map( (player) => {
+        
+        /*saveData.players.map( (player) => {
           switch(player.playerNumber){
             case 1:
               this.players[0].setStartPosition( player.x, player.y );
@@ -290,36 +295,21 @@ class Game {
               this.players[0].setStartPosition( player.x, player.y );
               break;
           }
-        }); 
+        }); */
       }
-      
 
-    // # UI
-      
-      this.UI = new UI( this.players, this.gameProps);
+    // Faz o player colidir com as paredes
+      this.phaserScene.physics.add.collider( this.player, this.wallGroup );
+      //this.phaserScene.physics.collide(this.player, this.wallGroup, () => { console.log('aaa') }, false, this.phaserScene);
+      var particles = this.phaserScene.add.particles('red');
 
-    // # Collision detection class
+      var emitter = particles.createEmitter({
+          speed: 100,
+          scale: { start: 1, end: 0 },
+          blendMode: 'ADD'
+      });
+      emitter.startFollow(this.player);
 
-      this.collision = new Collision( canvasStatic.width, canvasStatic.height );
-
-    // # Render
-
-      this.renderStatic = new Render(contextStatic, canvasStatic); // Render executed only once
-
-      // Add items to be rendered
-      this.renderStatic.setScenario(this.scenario); // set the scenario
-
-      this.renderStatic.addArrayItem(this.scenario.getStaticItems());
-      
-      this.renderStatic.start();
-    
-    // Hide Elements
-      document.getElementById("mainMenu").classList.remove('show');
-      this.loading(false);
-
-    // Show Canvas
-      document.getElementById('gameCanvas').classList.add('show');
-    
     // Make sure the game is not paused
       this.unpause();
     
@@ -331,6 +321,8 @@ class Game {
     
     // Ok, run the game now
       this.setGameReady(true);
+
+      document.getElementById('loading').style.display = 'none';
       
   }//newGame
 
@@ -341,34 +333,9 @@ class Game {
 
       if( this.isPaused() ) return;
       
-      //this.renderStatic.start( deltaTime );  // Static can also change, because it is the scenario... maybe will change this names to layers
-      //this.renderUI.start( deltaTime );
-     
-      // # Add the objects to the collision vector
-      //this.collision.clearArrayItems();
-      //this.collision.addArrayItem( this.scenario.getStaticItems() );
-     
-      /*this.players.map( (player) => {
-        this.collision.addArrayItem(player);
-      });*/
-  
-      // "Static" Render - Background
-     //this.renderStatic.clearArrayItems();
-      //this.renderStatic.addArrayItem(this.scenario.getStaticItems()); // Get all items from the scenario that needs to be rendered
-
-      // UI Render
-      //this.renderUI.clearArrayItems();
-      //this.renderUI.addArrayItem( this.UI.getNewRenderItems());
-      
       // # Movements
-      //this.players.map( (player) => {
-      //  player.handleMovement( this.keysDown );
-      //});
-
-      // # Check if player is colliding
-      //this.players.map( (player) => {
-      //  this.collision.check(player);
-      //});
+      this.player.handleKeysEvent( this.cursors );
+      
     }
 
     // # "Thread" tha runs the game
@@ -401,7 +368,7 @@ class Game {
 
     }
 
-    getScenario( scenario_id, contextStatic, canvasStatic, saveData ) {
+    getScenario( scenario_id, saveData ) {
 
       // ItemsState
       if( saveData ) {
@@ -411,11 +378,8 @@ class Game {
       }
 
       switch(scenario_id) {
-        case "prototype":
-          return new scenarioPrototype(contextStatic, canvasStatic, saveData );
-          break;
-        case "sandbox":
-          return new scenarioSandbox(contextStatic, canvasStatic, saveData );
+        case "main":
+          return new scenarioMain(saveData);
           break;
       }
 
@@ -628,9 +592,9 @@ class Game {
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
   // # Run
-  run(phaserScene) {
-    //console.log(phaser);
-    this.phaserScene = phaserScene;
+  run(action) {
+    
+    this.cursors = this.input.keyboard.createCursorKeys();
 
     // Hide Elements
     document.getElementById('mainMenu').classList.remove('show');
@@ -647,9 +611,16 @@ class Game {
     // Auto load a game - debug mode
     if( window.autoload ) {
       this.loadGame();
+    } else {
+
+      switch(action) {
+        case 'new' :
+          this.newGame();
+          break;
+      }
+
     }
 
-    //this.newGame();
   }
 
 }

@@ -2,16 +2,13 @@ const Sprite = require('../engine/core/Sprite');
 
 class Player {
 
-	constructor(gameProps, playerNumber, playerProps) {
-    // # Sprite
-      if( playerNumber == 1 ) {
-        this.playerSprite = document.getElementById('sprite_player_one');
-      }
-      if( playerNumber == 2 ) {
-        this.playerSprite = document.getElementById('sprite_player_two');
-      }
+	constructor(playerProps) {
 
-      this.sprite = new Sprite( this.playerSprite, 300, 960, 20, 40);
+    this.player = null;
+    
+    // # Sprite
+      
+      this.sprite = new Sprite('player');
       
       this.spriteProps = {};
       
@@ -25,7 +22,7 @@ class Player {
       this.fpsInterval = 1000 / 12; // 1000 / FPS
       this.deltaTime = Date.now();
 
-      this.chunkSize = gameProps.getProp('chunkSize');
+      this.chunkSize = window.game.gameProps.getProp('chunkSize');
     
     // # Position
       this.x = 0;
@@ -38,11 +35,10 @@ class Player {
       this.width = this.chunkSize; //px
       this.height = this.chunkSize * 2; //px
       
-      this.speed0 = 0.17;
-      this.speed = this.chunkSize * this.speed0;
+      this.speed0 = 160;
+      this.speed = this.speed0;
       
-      this.name = "player_" + playerNumber;
-      this.playerNumber = playerNumber;
+      this.name = "player";
       this.type = "player";
 
       this.grabing = false;
@@ -93,6 +89,10 @@ class Player {
       this.grabSound = false;
       
       this.run();
+  }
+
+  getPlayer() {
+    return this.player;
   }
 
   /*
@@ -270,135 +270,8 @@ class Player {
 		hidePlayer() { this.hideSprite = true; }
     showPlayer() { this.hideSprite = false; }
     
-    lookDown(){
-      this.spriteProps.direction = 'down';
-      
-      // Steps
-      if( this.isGrabing() ) {
-        this.step[1] = this.sprite.getFrame( 60 );
-        this.step[2] = this.sprite.getFrame( 61 );
-        this.step[3] = this.sprite.getFrame( 62 );
-        this.step[4] = this.sprite.getFrame( 63 );
-        this.step[5] = this.sprite.getFrame( 64 );
-        this.step[6] = this.sprite.getFrame( 65 );
-        this.step[7] = this.sprite.getFrame( 66 );
-        this.step[8] = this.sprite.getFrame( 67 );
-      } else {
-        this.step[1] = this.sprite.getFrame( 0 );
-        this.step[2] = this.sprite.getFrame( 1 );
-        this.step[3] = this.sprite.getFrame( 2 );
-        this.step[4] = this.sprite.getFrame( 3 );
-        this.step[5] = this.sprite.getFrame( 4 );
-        this.step[6] = this.sprite.getFrame( 5 );
-        this.step[7] = this.sprite.getFrame( 6 );
-        this.step[8] = this.sprite.getFrame( 7 );
-      }
-      
-      this.spriteProps.clip_x = this.step[this.stepCount].x;
-      this.spriteProps.clip_y = this.step[this.stepCount].y;
-
-    }
-    
-    lookUp(){
-      this.spriteProps.direction = 'up';
-      
-      if( this.isGrabing() ) {
-        this.step[1] = this.sprite.getFrame( 105 );
-        this.step[2] = this.sprite.getFrame( 105 );
-        this.step[3] = this.sprite.getFrame( 107 );
-        this.step[4] = this.sprite.getFrame( 108 );
-        this.step[5] = this.sprite.getFrame( 109 );
-        this.step[6] = this.sprite.getFrame( 110 );
-        this.step[7] = this.sprite.getFrame( 111 );
-        this.step[8] = this.sprite.getFrame( 112 );
-      } else {
-        this.step[1] = this.sprite.getFrame( 15 );
-        this.step[2] = this.sprite.getFrame( 15 );
-        this.step[3] = this.sprite.getFrame( 17 );
-        this.step[4] = this.sprite.getFrame( 18 );
-        this.step[5] = this.sprite.getFrame( 19 );
-        this.step[6] = this.sprite.getFrame( 20 );
-        this.step[7] = this.sprite.getFrame( 21 );
-        this.step[8] = this.sprite.getFrame( 22 );
-      }
-            
-      this.spriteProps.clip_x = this.step[this.stepCount].x;
-      this.spriteProps.clip_y = this.step[this.stepCount].y;
-    }
-    
-    lookRight(){
-      this.spriteProps.direction = 'right';
-      
-      if( this.isGrabing() ) {
-        this.step[1] = this.sprite.getFrame( 75 );
-        this.step[2] = this.sprite.getFrame( 76 );
-        this.step[3] = this.sprite.getFrame( 77 );
-        this.step[4] = this.sprite.getFrame( 78 );
-        this.step[5] = this.sprite.getFrame( 79 );
-        this.step[6] = this.sprite.getFrame( 80 );
-        this.step[7] = this.sprite.getFrame( 81 );
-        this.step[8] = this.sprite.getFrame( 82 );
-      } else {
-        this.step[1] = this.sprite.getFrame( 30 );
-        this.step[2] = this.sprite.getFrame( 31 );
-        this.step[3] = this.sprite.getFrame( 32 );
-        this.step[4] = this.sprite.getFrame( 33 );
-        this.step[5] = this.sprite.getFrame( 34 );
-        this.step[6] = this.sprite.getFrame( 35 );
-        this.step[7] = this.sprite.getFrame( 36 );
-        this.step[8] = this.sprite.getFrame( 37 );
-      }
-      
-      this.spriteProps.clip_x = this.step[this.stepCount].x;
-      this.spriteProps.clip_y = this.step[this.stepCount].y;
-    }
-        
-		lookLeft(){
-      this.spriteProps.direction = 'left';
-      
-      if( this.isGrabing() ) {
-        this.step[1] = this.sprite.getFrame( 90 );
-        this.step[2] = this.sprite.getFrame( 91 );
-        this.step[3] = this.sprite.getFrame( 92 );
-        this.step[4] = this.sprite.getFrame( 93 );
-        this.step[5] = this.sprite.getFrame( 94 );
-        this.step[6] = this.sprite.getFrame( 95 );
-        this.step[7] = this.sprite.getFrame( 96 );
-        this.step[8] = this.sprite.getFrame( 97 );
-      } else {
-        this.step[1] = this.sprite.getFrame( 45 );
-        this.step[2] = this.sprite.getFrame( 46 );
-        this.step[3] = this.sprite.getFrame( 47 );
-        this.step[4] = this.sprite.getFrame( 48 );
-        this.step[5] = this.sprite.getFrame( 49 );
-        this.step[6] = this.sprite.getFrame( 50 );
-        this.step[7] = this.sprite.getFrame( 51 );
-        this.step[8] = this.sprite.getFrame( 52 );
-      }
-      
-      this.spriteProps.clip_x = this.step[this.stepCount].x;
-      this.spriteProps.clip_y = this.step[this.stepCount].y;
-    }
 
   // # Controls the player FPS Movement independent of game FPS
-    canRenderNextFrame() {
-      let now = Date.now();
-			let elapsed = now - this.deltaTime;
-      if (elapsed > this.fpsInterval) {
-	      this.deltaTime = now - (elapsed % this.fpsInterval);
-        return true;
-			} else {
-        return false;
-      }
-    }  
-    increaseStep() {
-      if(this.canRenderNextFrame()) {
-        this.stepCount++;
-        if( this.stepCount > this.maxSteps ) {
-          this.stepCount = this.initialStep;
-        }
-      }
-    }
     resetStep() {
       this.stepCount = this.defaultStep;
       switch ( this.spriteProps.direction ) {
@@ -440,8 +313,8 @@ class Player {
       this.setY( y );
       this.x0 = x;
       this.y0 = y;
-      this.collisionX = x + this.CollisionXFormula;
-      this.collisionY = y + this.CollisionYFormula;
+      //this.collisionX = x + this.CollisionXFormula;
+      //this.collisionY = y + this.CollisionYFormula;
       this.checkGrabbingObjects();
     }
 
@@ -452,93 +325,169 @@ class Player {
 
     setX(x, setCollision) { 
       this.x = x; 
-      if( setCollision ) this.setCollisionX( x + this.CollisionXFormula );
+      this.player.setX(x);
+      //if( setCollision ) this.setCollisionX( x + this.CollisionXFormula );
     }
     setY(y, setCollision) { 
       this.y = y; 
-      if( setCollision ) this.setCollisionY( y + this.CollisionYFormula );
+      this.player.setY(y);
+      //if( setCollision ) this.setCollisionY( y + this.CollisionYFormula );
     }
     
     setSpeed(speed) { this.speed = this.chunkSize * speed; }
     
 		movLeft() { 
+      this.player.setVelocityX( -1 * this.speed );
+      this.player.anims.play('left', true);
+      this.spriteProps.direction = 'left';
+      /*
       this.increaseStep();
       this.setLookDirection( this.lookLeft() );
       this.setX( this.getX() - this.getSpeed()); 
       this.setCollisionX( this.getCollisionX() - this.getSpeed()); 
       this.updateGrabCollisionXY();
-      this.walking = true;
+      this.walking = true; */
     };
 			
 		movRight() { 
-      this.increaseStep();
-      this.setLookDirection( this.lookRight() );
-      this.setX( this.getX() + this.getSpeed() ); 
-      this.setCollisionX( this.getCollisionX() + this.getSpeed()); 
-      this.updateGrabCollisionXY();
+      this.player.setVelocityX( 1 * this.speed );
+      this.player.anims.play('right', true);
+      this.spriteProps.direction = 'right';
+
+      //this.increaseStep();
+      //this.setLookDirection( this.lookRight() );
+      //this.setX( this.getX() + this.getSpeed() ); 
+      //this.setCollisionX( this.getCollisionX() + this.getSpeed()); 
+      //this.updateGrabCollisionXY();
       this.walking = true;
     };
 			
 		movUp() { 
-      this.increaseStep();
+      this.player.setVelocityY( -1 * this.speed );
+      this.player.anims.play('up', true);
+      this.spriteProps.direction = 'up';
+      
+      /*this.increaseStep();
       this.setLookDirection( this.lookUp() );
       this.setY( this.getY() - this.getSpeed() ); 
       this.setCollisionY( this.getCollisionY() - this.getSpeed() );
       this.updateGrabCollisionXY();
-      this.walking = true;
+      this.walking = true;*/
     };
 			
 		movDown() {  
-      this.increaseStep();
+      this.player.setVelocityY( 1 * this.speed );
+      this.player.anims.play('down', true);
+      this.spriteProps.direction = 'down';
+
+      /*this.increaseStep();
       this.setLookDirection( this.lookDown() );
       this.setY( this.getY() + this.getSpeed() ); 
       this.setCollisionY( this.getCollisionY() + this.getSpeed() );
       this.updateGrabCollisionXY();
-      this.walking = true;
+      this.walking = true; */
     };
 
-    handleMovement( keysDown ) {
+    iddle() {
+      this.player.setVelocityX(0);
+      this.player.setVelocityY(0);
+      this.walking = false;
+      this.walkSound.stop();
 
-      // If dialog active, don't walk
-      if( window.game.isDialogActive() ) return;
-      
-      // Player 1 Controls
-      if( this.playerNumber == 1 ) {
-        if (37 in keysDown) this.movLeft();  // Left
-        if (38 in keysDown) this.movUp();    // Up  
-        if (39 in keysDown) this.movRight(); // Right
-        if (40 in keysDown) this.movDown();  // Down
+      switch( this.spriteProps.direction ) {
+        case 'up':
+          this.player.anims.play('iddle_up');
+          break;
+        case 'down':
+          this.player.anims.play('iddle_down');
+          break;
+        case 'left':
+          this.player.anims.play('iddle_left');
+          break;
+        case 'right':
+          this.player.anims.play('iddle_right');
+          break;
       }
-      
-      // Player 2 Controls
-      if( this.playerNumber == 2 ) {
-        if (65 in keysDown) this.movLeft();  // Left  => A
-        if (87 in keysDown) this.movUp();    // Up    => W
-        if (68 in keysDown) this.movRight(); // Right => D
-        if (83 in keysDown) this.movDown();  // Down  => S
-      }
-
     }
 
-    handleKeyUp(keyUp) {
+    createActions() {
       
+      let phaser = window.game.phaserScene;
+
+      phaser.anims.create({
+        key: 'down',
+        frames: phaser.anims.generateFrameNumbers('player', { start: 0, end: 7 }),
+        frameRate: 15,
+        repeat: -1
+      });
+      
+      phaser.anims.create({
+        key: 'up',
+        frames: phaser.anims.generateFrameNumbers('player', { start: 8, end: 15 }),
+        frameRate: 15,
+        repeat: -1
+      });
+      
+      phaser.anims.create({
+        key: 'right',
+        frames: phaser.anims.generateFrameNumbers('player', { start: 16, end: 23 }),
+        frameRate: 15,
+        repeat: -1
+      });
+      
+      window.game.phaserScene.anims.create({
+        key: 'left',
+        frames: phaser.anims.generateFrameNumbers('player', { start: 24, end: 31 }),
+        frameRate: 15,
+        repeat: -1
+      });
+
+      phaser.anims.create({
+        key: 'iddle_down',
+        frames: [ { key: 'player', frame: 0 } ],
+        frameRate: 10
+      });
+      phaser.anims.create({
+        key: 'iddle_up',
+        frames: [ { key: 'player', frame: 8 } ],
+        frameRate: 10
+      });
+      phaser.anims.create({
+        key: 'iddle_right',
+        frames: [ { key: 'player', frame: 16 } ],
+        frameRate: 10
+      });
+      phaser.anims.create({
+        key: 'iddle_left',
+        frames: [ { key: 'player', frame: 24 } ],
+        frameRate: 10
+      });
+      
+    }
+
+    handleKeysEvent( cursors ) {
+     
+      let left  = cursors.left.isDown;
+      let right = cursors.right.isDown;
+      let up    = cursors.up.isDown;
+      let down  = cursors.down.isDown;
+
       // If dialog active, don't walk
       if( window.game.isDialogActive() ) return;
       
+      if( left && !right && !down && !up )  this.movLeft();
+      if( right && !left && !down && !up)   this.movRight();
+      if( up && !left && !right && !down)   this.movUp();
+      if( down && !left && !right && !up)   this.movDown();
+
+      if( !left && !right && !up && !down ) this.iddle();
+      
+      /*
       // Player 1
       if( this.playerNumber == 1 ) {
         if (keyUp == 17) this.triggerGrab();  // Grab => CTRL
         if (keyUp == 32) this.triggerUse();   // Use => Space
-      }
-
-      // Player 2
-      if( this.playerNumber == 2 ) {
-        if (keyUp == 70) this.triggerGrab();  // Grab => F
-        if (keyUp == 69) this.triggerUse();  // Use => E
-      }
-
-      this.walking = false;
-      this.walkSound.stop();
+      }*/
     }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
@@ -652,46 +601,24 @@ class Player {
       if( this.walking && !this.walkSound.playing() ) {
         this.walkSound.play();
       }
-
-      // What to do every frame in terms of render? Draw the player
-      let props = {
-        x: this.getX(),
-        y: this.getY(),
-        w: this.getWidth(),
-        h: this.getHeight()
-      } 
-      
-      ctx.imageSmoothingEnabled = false;
-      ctx.drawImage(
-        this.sprite.getSprite(),  
-        this.spriteProps.clip_x, this.spriteProps.clip_y, 
-        this.sprite.getKeyWidth(), this.sprite.getKeyHeight(), 
-        props.x, props.y, props.w, props.h
-      );	
-
-      // DEBUG COLLISION
-      if( window.debug ) {
-        ctx.fillStyle = "rgba(0,0,255, 0.4)";
-        ctx.fillRect( this.getCollisionX(), this.getCollisionY(), this.getCollisionWidth(), this.getCollisionHeight() );
-
-        let text = "X: " + Math.round(this.getX()) + " Y:" + Math.round(this.getY());
-        ctx.font =  "25px 'Press Start 2P'";
-        ctx.fillStyle = "#FFFFFF";
-        ctx.fillText( text, this.getX() - 20, this.getY() - 20);
-
-        // Grab collision
-        ctx.fillStyle = "rgba(255,0,0, 0.4)";
-        ctx.fillRect( this.getGrabCollisionX(), this.getGrabCollisionY(), this.getGrabCollisionWidth(), this.getGrabCollisionHeight() );
-      }
       
 		};
 
 
     run() {
+      // Inicia o player do Phaser
+      this.player = window.game.phaserScene.physics.add.sprite(0, 0, 'player');
+      this.player.setBounce(0);
+      this.player.setCollideWorldBounds(true);
+
       this.initSounds();
       //this.checkGrabbingObjects();
-      this.lookDirection = this.lookDown();
-      this.updateGrabCollisionXY();
+      //this.lookDirection = this.lookDown();
+      //this.updateGrabCollisionXY();
+      
+      this.createActions(); // cria as funções de animação
+      this.player.setDrag(2000); // faz o player "grudar" no chão, o que impede ele de andar eternamente quando aperta uma tecla de movimento
+      this.player.setFrame(0);
     }
 		
 }//class

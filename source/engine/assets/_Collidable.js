@@ -28,7 +28,6 @@ class _Collidable {
     // # Sprite
     this.sprite = sprite;
 
-    //this.stageSprite = sprite.stageSprite;
     this.hideSprite = false;
 
     this.spriteProps = new Array();
@@ -143,6 +142,7 @@ class _Collidable {
     } 
     let spriteProps = this.spriteProps;
     
+    /*
     if( this.sprite.getSprite() ) { // Only render texture if it was set before
       ctx.imageSmoothingEnabled = false;
       ctx.drawImage(
@@ -151,16 +151,19 @@ class _Collidable {
         spriteProps.sprite_width, spriteProps.sprite_height, 
         props.x, props.y, props.w, props.h
       );
-    }
+    }*/
 
     // Phaser
-    window.game.phaserScene.add.sprite(this.getX(), this.getY(), this.sprite.getSprite().id )
+    /*
+      window.game.phaserScene.add.image(this.getX(), this.getY(), this.sprite.getSprite() )
       .setOrigin(0,0)
-      .setFrame( this.sprite.getSpriteIndex() - 1 ); //
-      //.setScale( this.sprite.getScaleFactor() );
+      //.setAngle(45)
+      .setFrame( this.sprite.getSpriteIndex() ); //
+      //.setScale( this.sprite.getScaleFactor() ); */
 
     /* - - */
-      
+    
+    /*
     //DEBUG Chunk Size
     if( window.debug ) {
 
@@ -177,7 +180,7 @@ class _Collidable {
       ctx.lineWidth   = 5;
       ctx.strokeRect(collision_props.x, collision_props.y, collision_props.w, collision_props.h);
 
-    }
+    }*/
   
   }
     

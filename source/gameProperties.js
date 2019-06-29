@@ -7,8 +7,8 @@ class gameProperties {
     
     this.chunkSize = 32; //px - resolution
     
-    this.screenHorizontalChunks = 16;
-    this.screenVerticalChunks = 14;
+    this.screenHorizontalChunks = 20;
+    this.screenVerticalChunks = 18;
     
     this.canvasWidth = (this.chunkSize * this.screenHorizontalChunks);
     this.canvasHeight = (this.chunkSize * this.screenVerticalChunks);// Canvas size based on "chunks" 
@@ -28,5 +28,5 @@ module.exports = gameProperties;
   // Debug
   window.debug = false; // Show debug squares
   window.debugCollision = false; // Show when objects collide
-  window.autoload = true; // auto load a saved game
+  window.autoload = false; // auto load a saved game
   window.god_mode = false; // Players won't die

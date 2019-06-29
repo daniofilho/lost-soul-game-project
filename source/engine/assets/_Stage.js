@@ -1,3 +1,5 @@
+const Player = require('../../assets/Player.js');
+
 class _Stage {
 
   constructor(stageId, stageMap, stageAssets, scenarioTileSet) {
@@ -8,11 +10,10 @@ class _Stage {
 
     this.chunkSize = window.game.getChunkSize();
 
-    this.player1StartX = 0;
-    this.player1StartY = 0;
-    
-    this.player2StartX = 0;
-    this.player2StartY = 0;
+    this.player = null;
+
+    this.playerStartX = 0;
+    this.playerStartY = 0;
 
     this.stageId = stageId;
 
@@ -34,24 +35,35 @@ class _Stage {
   getStaticItems() { return this.renderItems; }
   getLayerItems() { return this.renderLayerItems; }
   
-  getPlayer1StartX() { return this.player1StartX; }
-  getPlayer1StartY() { return this.player1StartY; }
+  getPlayer(){ return this.player; }
+  getPlayerStartX() { return this.playerStartX; }
+  getPlayerStartY() { return this.playerStartY; }
   
-  getPlayer2StartX() { return this.player2StartX; }
-  getPlayer2StartY() { return this.player2StartY; }
-
   getStageId() { return this.stageId; }
   
   // # Sets
-  setPlayer1StartX(x) { this.player1StartX = x; }
-  setPlayer1StartY(y) { this.player1StartY = y; }
-
-  setPlayer2StartX(x) { this.player2StartX = x; }
-  setPlayer2StartY(y) { this.player2StartY = y; }
+  setPlayerStartX(x) { this.playerStartX = x; }
+  setPlayerStartY(y) { this.playerStartY = y; }
   
   // # Add Items to the render
 	addStaticItem(item){
     this.renderItems.push(item);
+    
+    // Renderiza o asset na tela
+    let asset = window.game.phaserScene.add.image(item.getX(), item.getY(), item.sprite.getSprite() )
+      .setOrigin(0,0)
+      .setFrame( item.sprite.getSpriteIndex() ); 
+
+    // Adiciona ao grupo correto
+    switch( item.group ) {
+      case 'floor':
+        window.game.floorGroup.add(asset);
+        break;
+      case 'wall':
+        window.game.wallGroup.add(asset);
+        break;
+    }
+    
   }
   clearArrayItems(){
     this.renderItems = new Array();
@@ -80,11 +92,8 @@ class _Stage {
       if( layer.name == "player") {
         this.stageMap.push( {code: 'player'} );
 
-        this.setPlayer1StartX( layer.properties.find( x => x.name === 'player_1_x' ).value * this.chunkSize );
-        this.setPlayer1StartY( layer.properties.find( x => x.name === 'player_1_y' ).value * this.chunkSize );
-      
-        this.setPlayer2StartX( layer.properties.find( x => x.name === 'player_2_x' ).value * this.chunkSize );
-        this.setPlayer2StartY( layer.properties.find( x => x.name === 'player_2_y' ).value * this.chunkSize );
+        this.setPlayerStartX( layer.properties.find( x => x.name === 'player_x' ).value * this.chunkSize );
+        this.setPlayerStartY( layer.properties.find( x => x.name === 'player_y' ).value * this.chunkSize );
 
       }
 
@@ -195,9 +204,8 @@ class _Stage {
       switch( obj.code ) {
 
         case 'player':
-          window.game.players.map( (player) => {
-            this.addStaticItem( player ); // Adds the player to the render
-          });
+          // Check saved state!!!!!!
+          this.player = new Player();
           break;
 
         case 'assets':

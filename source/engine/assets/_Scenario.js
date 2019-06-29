@@ -6,8 +6,8 @@ class _Scenario {
         
     this.renderItems = new Array();
         
-    this.width = canvas.width;
-    this.height = canvas.height;
+    this.width = window.game.gameProps.getProp('canvasWidth');
+    this.height = window.game.gameProps.getProp('canvasHeight');
     
     this.playerStartX = 0; 
     this.playerStartY = 0; 
@@ -52,18 +52,14 @@ class _Scenario {
   getStaticItems() { return this.renderItems; }
   getLayerItems() { return this.renderLayerItems; }
   
-  getPlayer1StartX() { return this.player1StartX; }
-  getPlayer1StartY() { return this.player1StartY; }
-  
-  getPlayer2StartX() { return this.player2StartX; }
-  getPlayer2StartY() { return this.player2StartY; }
-  
-  // # Sets
-  setPlayer1StartX(x) { this.player1StartX = x; }
-  setPlayer1StartY(y) { this.player1StartY = y; }
+  getPlayerStartX() { return this.playerStartX; }
+  getPlayerStartY() { return this.playerStartY; }
 
-  setPlayer2StartX(x) { this.player2StartX = x; }
-  setPlayer2StartY(y) { this.player2StartY = y; }
+  getPlayer() { return this.stage.getPlayer(); }
+
+  // # Sets
+  setPlayerStartX(x) { this.playerStartX = x; }
+  setPlayerStartY(y) { this.playerStartY = y; }
 
   setActualStageId(id){ 
     this.stageId = id; 
@@ -155,10 +151,8 @@ class _Scenario {
 
     // Only set player start at first load
     if(firstStage) {
-      this.setPlayer1StartX( this.stage.getPlayer1StartX() );
-      this.setPlayer1StartY( this.stage.getPlayer1StartY() );
-      this.setPlayer2StartX( this.stage.getPlayer2StartX() );
-      this.setPlayer2StartY( this.stage.getPlayer2StartY() );
+      this.setPlayerStartX( this.stage.getPlayerStartX() );
+      this.setPlayerStartY( this.stage.getPlayerStartY() );
     } else {
       window.game.players.map( (player) => {
         player.checkGrabbingObjects();
@@ -168,6 +162,7 @@ class _Scenario {
   }
 
   render() { }
+
 
 }//class
 module.exports = _Scenario;
