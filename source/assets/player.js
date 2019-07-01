@@ -614,12 +614,13 @@ class Player {
 
 
     run() {
+      this.initSounds();
+
       // Inicia o player do Phaser
       this.player = window.game.phaserScene.physics.add.sprite(0, 0, 'player');
       this.player.setBounce(0);
       this.player.setCollideWorldBounds(true);
 
-      this.initSounds();
       //this.checkGrabbingObjects();
       //this.lookDirection = this.lookDown();
       //this.updateGrabCollisionXY();
@@ -627,6 +628,7 @@ class Player {
       this.createActions(); // cria as funções de animação
       this.player.setDrag(2000); // faz o player "grudar" no chão, o que impede ele de andar eternamente quando aperta uma tecla de movimento
       this.player.setFrame(0);
+      this.player.setSize(32, 32, false);
     }
 		
 }//class
