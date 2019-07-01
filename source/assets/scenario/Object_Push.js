@@ -35,7 +35,6 @@ class Object_Push extends _CanBePushed {
 
     super(props, position, dimension, sprite, events, canPush);
     
-    this.group = "item-wall";
   }
 
   // # Sprites  

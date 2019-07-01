@@ -1,7 +1,9 @@
 class Render {
 
-  constructor(player) {
+  constructor(ctx, canvas, player) {
+    this.ctx = ctx; 
     this.scenario = "";
+    this.canvas = canvas;
     this.player = player;
     this.renderItems = new Array(); 
   }
@@ -27,6 +29,10 @@ class Render {
   // This functions will be called constantly to render items
   start(deltaTime) {		
                 
+    // Clear canvas before render again
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.shadowBlur = 0;
+
     // Scenario
     if ( this.scenario != "") 
       this.scenario.render(this.ctx);

@@ -31,7 +31,6 @@ class Dialog extends _DialogTrigger {
 	super(props, position, dimension, sprite, events, { fromSaveState: false });
 
 	this.type = 'dialog';
-	this.group = "wall";
   }
 
   // # Sprites

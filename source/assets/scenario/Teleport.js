@@ -30,7 +30,7 @@ class Teleport extends _Collidable {
     super(props, position, dimension, sprite, events);
     
     this.props = tpProps;
-    this.group = "item-not-wall";
+
   }
 
   // # Sprites

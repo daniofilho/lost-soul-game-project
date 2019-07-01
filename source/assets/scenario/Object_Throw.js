@@ -40,8 +40,6 @@ class Object_Throw extends _CanThrow {
 
     this.setNeedSaveState(true);//set to save just to check if user is grabbing it when leaving stage
     this.handleProps();
-
-    this.group = "item-wall";
   }
 
   // # Sprites  
