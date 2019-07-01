@@ -90,6 +90,8 @@ class Enemy extends _CanHurt {
     this.initSounds();
 
     this.runEnemy();
+
+    this.group = "enemy";
   }
 
   /*

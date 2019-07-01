@@ -40,6 +40,8 @@ class Door extends _CanCollect {
 
     this.handleProps();
     this.initSounds();
+
+    this.group = "wall";
   }
 
   /*

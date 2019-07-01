@@ -43,6 +43,9 @@ class Fire extends _CanHurt {
     let randFPS = Math.floor(Math.random() * 7) + 5; // Generate a random FPS, so multiple Fires on page don't animate the same way 
     this.fpsInterval = 1000 / randFPS; // 1000 / FPS
     this.deltaTime = Date.now();
+
+    this.group = "item-not-wall";
+
   }
 
   // # Sprites  

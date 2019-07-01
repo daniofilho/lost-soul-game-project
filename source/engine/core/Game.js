@@ -264,6 +264,29 @@ class Game extends Phaser.Scene {
   }
 
   startNewGame( saveData ) {
+
+    this.refreshVariables();
+    
+    // # Init
+  
+    // # Players
+    /*
+      this.players = new Array();
+
+      if( ! saveData ) {
+        let player = new Player( this.gameProps, 1 ); 
+        this.players.push(player);
+        if ( this.multiplayer ) {
+          let player2 = new Player( this.gameProps, 2 ); 
+          this.players.push(player2);
+        }
+      } else {
+        saveData.players.map( (player) => {
+          let _player = new Player( this.gameProps, player.playerNumber, player ); 
+          this.players.push( _player);
+        });  
+      }
+      */
     
     this.refreshVariables();
    
@@ -314,7 +337,7 @@ class Game extends Phaser.Scene {
       this.unpause();
     
     // Scenario sound
-      this.scenarioSound.play();
+      //this.scenarioSound.play();
 
     // Flag 
       this.gameIsLoaded = true;
@@ -597,8 +620,6 @@ class Game extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
 
     // Hide Elements
-    document.getElementById('mainMenu').classList.remove('show');
-    document.getElementById('gameCanvas').classList.remove('show');
     this.loading(false);
     this.gameOver(false);
 

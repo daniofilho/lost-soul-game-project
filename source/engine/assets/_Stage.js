@@ -28,6 +28,9 @@ class _Stage {
 
     this.coordinates = {};
 
+    // Groups for collision
+    this.wall = window.game.phaserScene.physics.add.staticGroup();
+
     this.run();
   }
 
@@ -226,10 +229,30 @@ class _Stage {
     });
   }
 
+  proccessStageAssets() {
+    this.renderItems.map( (item) => {
+      
+      switch( item.group ){
+        default:
+          break;
+
+        case "wall":
+          this.wall.add.sprite( item.getX(), item.getY(), item.sprite.getSprite().id )
+            .setOrigin(0,0)
+            .setFrame( this.sprite.getSpriteIndex() - 1 ); //
+          //.setScale( this.sprite.getScaleFactor() );*/
+          break;
+      }
+
+    });
+  }
+
   run () {  
     this.calculateStageCoordinates();
     this.loadJSON();
     this.loadStageItems();
+
+    this.proccessStageAssets();
   }
 
 } // class

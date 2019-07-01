@@ -40,6 +40,8 @@ class Key extends _CanThrow {
 
     this.setNeedSaveState(true);
     this.handleProps();
+
+    this.group = "item-wall";
   }
 
   // Check if this item has some save state
