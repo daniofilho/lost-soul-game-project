@@ -60,6 +60,8 @@ class Player {
       this.collisionX = 0;//this.x0 + this.CollisionXFormula;
       this.collisionY = 0;//this.y0 + this.CollisionYFormula;
 
+      // https://phaser.io/tutorials/coding-tips-005
+
       this.collisionX0 = this.collisionX;
       this.collisionY0 = this.collisionY;
 
@@ -92,7 +94,7 @@ class Player {
   }
 
   getPlayer() {
-    return this.player;
+    return this.player; 
   }
 
   /*
@@ -336,10 +338,12 @@ class Player {
     
     setSpeed(speed) { this.speed = this.chunkSize * speed; }
     
-		movLeft() { 
+		movLeft(up, down) { 
       this.player.setVelocityX( -1 * this.speed );
-      this.player.anims.play('left', true);
-      this.spriteProps.direction = 'left';
+      if( !up && !down ) {
+        this.player.anims.play('left', true);
+        this.spriteProps.direction = 'left';
+      }
       /*
       this.increaseStep();
       this.setLookDirection( this.lookLeft() );
@@ -349,10 +353,12 @@ class Player {
       this.walking = true; */
     };
 			
-		movRight() { 
+		movRight(up, down) { 
       this.player.setVelocityX( 1 * this.speed );
-      this.player.anims.play('right', true);
-      this.spriteProps.direction = 'right';
+      if( !up && !down ) {
+        this.player.anims.play('right', true);
+        this.spriteProps.direction = 'right';
+      }
 
       //this.increaseStep();
       //this.setLookDirection( this.lookRight() );
@@ -475,10 +481,12 @@ class Player {
       // If dialog active, don't walk
       if( window.game.isDialogActive() ) return;
       
-      if( left && !right && !down && !up )  this.movLeft();
-      if( right && !left && !down && !up)   this.movRight();
-      if( up && !left && !right && !down)   this.movUp();
-      if( down && !left && !right && !up)   this.movDown();
+      if( left  && !right ) this.movLeft(up, down);
+      if( right && !left )  this.movRight(up, down);
+      if( left && right ) this.player.anims.play('iddle_right'); // Previne ficar com animação de andando quando ambas teclas estão apertadas
+      if( up    && !down )  this.movUp();
+      if( down  && !up )    this.movDown();
+      if( up && down ) this.player.anims.play('iddle_down');
 
       if( !left && !right && !up && !down ) this.iddle();
       

@@ -50,9 +50,7 @@ class _Stage {
     this.renderItems.push(item);
     
     // Renderiza o asset na tela
-    let asset = window.game.phaserScene.add.image(item.getX(), item.getY(), item.sprite.getSprite() )
-      .setOrigin(0,0)
-      .setFrame( item.sprite.getSpriteIndex() ); 
+    let asset = window.game.phaserScene.add.image(item.getX(), item.getY(), item.sprite.getSprite() ).setOrigin(0,0).setFrame( item.sprite.getSpriteIndex() ); 
 
     // Adiciona ao grupo correto
     switch( item.group ) {

@@ -244,7 +244,7 @@ class Game extends Phaser.Scene {
   refreshVariables() {
 
     // Clear save state
-    localStorage.removeItem('gufitrupi__itemsState');
+    localStorage.removeItem('lostsoul__itemsState');
 
     // Renders
     this.itemsState = new Object();
@@ -291,24 +291,12 @@ class Game extends Phaser.Scene {
             case 1:
               this.players[0].setStartPosition( player.x, player.y );
               break;
-            case 2:
-              this.players[0].setStartPosition( player.x, player.y );
-              break;
           }
         }); */
       }
-
+   
     // Faz o player colidir com as paredes
-      this.phaserScene.physics.add.collider( this.player, this.wallGroup );
-      //this.phaserScene.physics.collide(this.player, this.wallGroup, () => { console.log('aaa') }, false, this.phaserScene);
-      var particles = this.phaserScene.add.particles('red');
-
-      var emitter = particles.createEmitter({
-          speed: 100,
-          scale: { start: 1, end: 0 },
-          blendMode: 'ADD'
-      });
-      emitter.startFollow(this.player);
+      this.phaserScene.physics.add.collider(this.player.player, this.wallGroup); // preciso entender o motivo da variável player (que é a que preciso retornar) está dentro da própria player
 
     // Make sure the game is not paused
       this.unpause();
@@ -327,54 +315,22 @@ class Game extends Phaser.Scene {
   }//newGame
 
     // # The Game Loop
-    updateGame(deltaTime) {
+    updateGame() {
 
       if( ! this.gameReady ) return;
-
-      if( this.isPaused() ) return;
       
       // # Movements
       this.player.handleKeysEvent( this.cursors );
       
     }
 
-    // # "Thread" tha runs the game
-    runGame(fps) {
-      this.fpsInterval = 1000 / fps;
-      this.deltaTime = Date.now();
-      this.startTime = this.deltaTime;
-      this.gameLoop();
-    }
-    gameLoop() {
-
-      // calc elapsed time since last loop
-      this.now = Date.now();
-      this.elapsed = this.now - this.deltaTime;
-
-      // if enough time has elapsed, draw the next frame
-      if ( this.elapsed > this.fpsInterval) {
-
-        // Get ready for next frame by setting then=now, but also adjust for your
-        // specified fpsInterval not being a multiple of RAF's interval (16.7ms)
-        this.deltaTime = this.now - (this.elapsed % this.fpsInterval);
-
-        this.updateGame( this.deltaTime );
-
-      }
-
-      // Runs only when the browser is in focus
-      // Request another frame
-      requestAnimationFrame( this.gameLoop.bind(this) );
-
-    }
-
     getScenario( scenario_id, saveData ) {
 
       // ItemsState
       if( saveData ) {
-        localStorage.setItem( 'gufitrupi__itemsState', JSON.stringify(saveData.scenario.items) );
+        localStorage.setItem( 'lostsoul__itemsState', JSON.stringify(saveData.scenario.items) );
       } else {
-        localStorage.setItem( 'gufitrupi__itemsState', JSON.stringify({}) ); // Clear previous savestate
+        localStorage.setItem( 'lostsoul__itemsState', JSON.stringify({}) ); // Clear previous savestate
       }
 
       switch(scenario_id) {
@@ -489,7 +445,7 @@ class Game extends Phaser.Scene {
       saveData = JSON.stringify(saveData);
       
       // Save on LocalStorage
-      localStorage.setItem( 'gufitrupi__save', saveData );
+      localStorage.setItem( 'lostsoul__save', saveData );
 
       alert('Jogo salvo!');
     }
@@ -501,14 +457,14 @@ class Game extends Phaser.Scene {
   loadGame() {
     
     // # Get data from localstorage and converts to json
-    let saveData = JSON.parse( localStorage.getItem('gufitrupi__save') );
+    let saveData = JSON.parse( localStorage.getItem('lostsoul__save') );
 
     if( saveData ) {
       // Will be  multiplayer game?
       this.multiplayer = ( saveData ) ? saveData.multiplayer : false;
 
       // Replace items state on local storage with saved states
-      localStorage.setItem( 'gufitrupi__itemsState', JSON.stringify( saveData.scenario.items ) );
+      localStorage.setItem( 'lostsoul__itemsState', JSON.stringify( saveData.scenario.items ) );
 
       // Load Items itens
       for( let i in saveData.scenario.items ) {
@@ -578,7 +534,7 @@ class Game extends Phaser.Scene {
 
     saveItemsState() {
       let itemsState = JSON.stringify( this.getItemsState() );
-      localStorage.setItem( 'gufitrupi__itemsState', itemsState );
+      localStorage.setItem( 'lostsoul__itemsState', itemsState );
     }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

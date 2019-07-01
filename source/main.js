@@ -15,8 +15,11 @@ new Phaser.Game({
     default: 'arcade',
     arcade: {
       gravity: { y: 0 },
-      debug: true
+      debug: false
     }
   },
   scene: [game]
 });
+
+
+// Menu scene logic https://github.com/jackyrusly/jrgame/blob/master/client/scenes/Init.js
