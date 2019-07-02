@@ -618,17 +618,19 @@ class Player {
 
       // Inicia o player do Phaser
       this.player = window.game.phaserScene.physics.add.sprite(0, 0, 'player');
-      this.player.setBounce(0);
-      this.player.setCollideWorldBounds(true);
+      this.player
+        .setSize(20, 32, false)
+        .setOffset(6, 32)  // Move o box definido acima para outra posição
+        .setFrame(0) // Frame inicial do personagem
+        .setCollideWorldBounds(true) // Não deixa ele sair fora da tela
+        .setDrag(2000); // faz o player "grudar" no chão, o que impede ele de andar eternamente quando aperta uma tecla de movimento
 
       //this.checkGrabbingObjects();
       //this.lookDirection = this.lookDown();
       //this.updateGrabCollisionXY();
       
       this.createActions(); // cria as funções de animação
-      this.player.setDrag(2000); // faz o player "grudar" no chão, o que impede ele de andar eternamente quando aperta uma tecla de movimento
-      this.player.setFrame(0);
-      this.player.setSize(32, 32, false);
+
     }
 		
 }//class

@@ -20,7 +20,7 @@ class Teleport extends _Collidable {
       height: window.game.getChunkSize()
     }
 
-    let sprite = new Sprite(false, 0, 0, 0, 0);
+    let sprite = new Sprite( 'teleport' );
 
     let events = {
       stopOnCollision: false,
@@ -30,6 +30,8 @@ class Teleport extends _Collidable {
     super(props, position, dimension, sprite, events);
     
     this.props = tpProps;
+    this.sprite.setSpriteIndex(0);
+    this.group = "teleport";
 
   }
 
@@ -46,36 +48,20 @@ class Teleport extends _Collidable {
   }
 
   // Collision Event
-  collision(playerWhoActivatedTeleport, collidable) {
+  collision(player, scenario) {
     
-    let players = window.game.players;
+    console.log(player);
 
-    this.teleport( playerWhoActivatedTeleport );
+    this.teleport( player );
       
     // Make everything dark
-    collidable.scenario.clearArrayItems();
     window.game.loading(true);
 
     // Hide all players
-    players.map( (player) => {
-      player.hidePlayer();
-    });
-
-    // Now teleport all players to same location and direction
-    let targetX = playerWhoActivatedTeleport.getX();
-    let targetY = playerWhoActivatedTeleport.getY();
-    let lookDirection = playerWhoActivatedTeleport.getSpriteProps().direction;
+    player.hidePlayer();
     
-    players.map( (player) => {
-      player.setX(targetX, true); // true = also set collision x too
-      player.setY(targetY, true);
-      player.triggerLookDirection(lookDirection);
-      player.checkGrabbingObjects();
-      player.showPlayer();
-    });
-
     // Change stage
-    collidable.scenario.setStage( 
+    scenario.setStage( 
       this.props.target.stage,
       false // firstStage ?
     );
@@ -85,8 +71,8 @@ class Teleport extends _Collidable {
   }
 
   teleport( player ) {
-    player.setX( this.props.target.x );// This is the X position of player HEADER. Remeber that collision box is on player foot
-    player.setY(this.props.target.y );
+    player.setX(this.props.target.x);// This is the X position of player HEADER. Remeber that collision box is on player foot
+    player.setY(this.props.target.y);
   }
 
 }//class

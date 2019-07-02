@@ -90,6 +90,11 @@ class Game extends Phaser.Scene {
         'assets/scenario/sprites/tilesetScenario.png',
         { frameWidth: 32, frameHeight: 32 }
       );
+      
+      this.load.spritesheet('teleport', 
+        'assets/scenario/sprites/teleport.png',
+        { frameWidth: 32, frameHeight: 32 }
+      );
 
     }
 
@@ -97,6 +102,7 @@ class Game extends Phaser.Scene {
       // Grupos
       this.floorGroup = this.physics.add.staticGroup();
       this.wallGroup = this.physics.add.staticGroup();
+      this.teleportGroup = this.physics.add.staticGroup();
 
       // Starta
       this.phaserScene = this;
@@ -297,6 +303,9 @@ class Game extends Phaser.Scene {
    
     // Faz o player colidir com as paredes
       this.phaserScene.physics.add.collider(this.player.player, this.wallGroup); // preciso entender o motivo da variável player (que é a que preciso retornar) está dentro da própria player
+    
+    // O que acontece ao colidir com um TP
+      this.phaserScene.physics.add.overlap(this.player.player, this.teleportGroup, this.checkTeleport );
 
     // Make sure the game is not paused
       this.unpause();
@@ -339,6 +348,13 @@ class Game extends Phaser.Scene {
           break;
       }
 
+    }
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+    // Colliders
+    checkTeleport(_player, teleport) {
+      teleport.instance.collision( window.game.player, window.game.scenario ); // Usa a instância guardada ao invés da instância do Phaser que não tem as props de player
     }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

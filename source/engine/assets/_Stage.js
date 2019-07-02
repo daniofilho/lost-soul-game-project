@@ -51,6 +51,7 @@ class _Stage {
     
     // Renderiza o asset na tela
     let asset = window.game.phaserScene.add.image(item.getX(), item.getY(), item.sprite.getSprite() ).setOrigin(0,0).setFrame( item.sprite.getSpriteIndex() ); 
+    asset.instance = item;
 
     // Adiciona ao grupo correto
     switch( item.group ) {
@@ -59,6 +60,9 @@ class _Stage {
         break;
       case 'wall':
         window.game.wallGroup.add(asset);
+        break;
+      case 'teleport':
+        window.game.teleportGroup.add(asset);
         break;
     }
     

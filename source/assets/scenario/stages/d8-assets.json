@@ -1,4 +1,16 @@
 {
-       "teleports": [ ],
+  "teleports": [ 
+    {
+			"xIndex": 9,
+			"yIndex": 0,
+			"props": {  
+				"target": {
+					"stage": "D7",
+					"x": 9,
+					"y": 16
+				}
+			}
+		}
+  ],
 	"dialogs":[] 
 }
