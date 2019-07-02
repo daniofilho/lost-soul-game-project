@@ -49,16 +49,11 @@ class Teleport extends _Collidable {
 
   // Collision Event
   collision(player, scenario) {
-    
-    console.log(player);
 
     this.teleport( player );
-      
+    
     // Make everything dark
     window.game.loading(true);
-
-    // Hide all players
-    player.hidePlayer();
     
     // Change stage
     scenario.setStage( 

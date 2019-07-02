@@ -39,6 +39,12 @@ class _Scenario {
     this.renderItems.push(item);
   }
   clearArrayItems(){
+    this.renderItems.map( (item) => {
+      item.asset.destroy();
+    });
+    window.game.floorGroup.clear( true, true );
+    window.game.wallGroup.clear( true, true );
+    window.game.teleportGroup.clear( true, true );
     this.renderItems = new Array();
   }
 
@@ -69,11 +75,12 @@ class _Scenario {
   // # Save the State of items
   saveItemsState() {
     // Bottom Layer
+    /*
     let items = window.game.collision.getColItens();
     for (let i in items) {
       this.handleItemIfNeedSave(items[i]);
     }
-    window.game.saveItemsState();
+    window.game.saveItemsState();*/
   }
 
   handleItemIfNeedSave(item) {

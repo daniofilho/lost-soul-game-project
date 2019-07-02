@@ -619,6 +619,7 @@ class Player {
       // Inicia o player do Phaser
       this.player = window.game.phaserScene.physics.add.sprite(0, 0, 'player');
       this.player
+        .setOrigin(0, 0)
         .setSize(20, 32, false)
         .setOffset(6, 32)  // Move o box definido acima para outra posição
         .setFrame(0) // Frame inicial do personagem

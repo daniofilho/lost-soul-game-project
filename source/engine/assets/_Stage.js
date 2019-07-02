@@ -47,11 +47,13 @@ class _Stage {
   
   // # Add Items to the render
 	addStaticItem(item){
-    this.renderItems.push(item);
     
     // Renderiza o asset na tela
     let asset = window.game.phaserScene.add.image(item.getX(), item.getY(), item.sprite.getSprite() ).setOrigin(0,0).setFrame( item.sprite.getSpriteIndex() ); 
     asset.instance = item;
+
+    item.asset = asset;
+    this.renderItems.push(item);
 
     // Adiciona ao grupo correto
     switch( item.group ) {
@@ -207,7 +209,7 @@ class _Stage {
 
         case 'player':
           // Check saved state!!!!!!
-          this.player = new Player();
+          if( window.game.player == null ) this.player = new Player();
           break;
 
         case 'assets':

@@ -73,6 +73,7 @@ class Game extends Phaser.Scene {
     // Groups
     this.floorGroup = null;
     this.wallGroup = null;
+    this.teleportGroup = null;
 
     this.initSound();
   }
@@ -305,7 +306,7 @@ class Game extends Phaser.Scene {
       this.phaserScene.physics.add.collider(this.player.player, this.wallGroup); // preciso entender o motivo da variável player (que é a que preciso retornar) está dentro da própria player
     
     // O que acontece ao colidir com um TP
-      this.phaserScene.physics.add.overlap(this.player.player, this.teleportGroup, this.checkTeleport );
+      this.phaserScene.physics.add.overlap(this.player.player, this.teleportGroup, (_player, teleport) => { this.checkTeleport(_player, teleport) } );
 
     // Make sure the game is not paused
       this.unpause();
@@ -354,7 +355,7 @@ class Game extends Phaser.Scene {
 
     // Colliders
     checkTeleport(_player, teleport) {
-      teleport.instance.collision( window.game.player, window.game.scenario ); // Usa a instância guardada ao invés da instância do Phaser que não tem as props de player
+      teleport.instance.collision(this.player, this.scenario ); // Usa a instância guardada ao invés da instância do Phaser que não tem as props de player
     }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
