@@ -116,6 +116,7 @@ class Player {
   */
 
     checkGrabbingObjects() {
+      /*
       let hasGrabObject = false;
       // Check if player has grabbed items
       let renderedItems = window.game.scenario.getStaticItems();
@@ -139,6 +140,7 @@ class Player {
         this.setNotGrabbing();
       }
       return false;
+      */
     }
     checkItemOnGrabCollisionBox() {
       return window.game.collision.justCheck(this, this.getGrabCollisionX(), this.getGrabCollisionY(), this.getGrabCollisionWidth(), this.getGrabCollisionHeight());
@@ -477,6 +479,7 @@ class Player {
       let right = cursors.right.isDown;
       let up    = cursors.up.isDown;
       let down  = cursors.down.isDown;
+      let shift  = cursors.shift.isDown;
 
       // If dialog active, don't walk
       if( window.game.isDialogActive() ) return;
@@ -489,6 +492,8 @@ class Player {
       if( up && down ) this.player.anims.play('iddle_down');
 
       if( !left && !right && !up && !down ) this.iddle();
+      
+      this.speed = (shift) ? this.speed0 *2 : this.speed0;
       
       /*
       // Player 1

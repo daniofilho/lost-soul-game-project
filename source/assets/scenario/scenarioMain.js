@@ -62,10 +62,10 @@ class scenarioMain extends _Scenario {
     let _stage = null;
 
     switch( stage_id ) {
-      default:
       case 'D7':
         _stage = new _Stage( stage_id, jsonStageD7, jsonStageD7Assets, jsonScenarioTileSet );
-      case 'D8':
+        break;
+      default: case 'D8':
         _stage = new _Stage( stage_id, jsonStageD8, jsonStageD8Assets, jsonScenarioTileSet );
         break;
     }

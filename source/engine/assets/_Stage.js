@@ -28,6 +28,8 @@ class _Stage {
 
     this.coordinates = {};
 
+    this.layerDepth = 0; // Controle o z-index de cada asset
+
     this.run();
   }
 
@@ -54,6 +56,8 @@ class _Stage {
 
     item.asset = asset;
     this.renderItems.push(item);
+
+    asset.setDepth( this.layerDepth );
 
     // Adiciona ao grupo correto
     switch( item.group ) {
@@ -208,15 +212,23 @@ class _Stage {
       switch( obj.code ) {
 
         case 'player':
+          this.layerDepth++;
           // Check saved state!!!!!!
-          if( window.game.player == null ) this.player = new Player();
+          if( window.game.player == null ) {
+            this.player = new Player();
+          } else {
+            this.player = window.game.player;
+          }
+          this.player.player.setDepth( this.layerDepth );
           break;
 
         case 'assets':
+          this.layerDepth++;
           this.loadAssets();
           break;
 
         case 'saved-items':
+          this.layerDepth++;
           this.loadSavedStateItems();
           break;
 

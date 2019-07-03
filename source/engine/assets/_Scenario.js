@@ -161,9 +161,7 @@ class _Scenario {
       this.setPlayerStartX( this.stage.getPlayerStartX() );
       this.setPlayerStartY( this.stage.getPlayerStartY() );
     } else {
-      window.game.players.map( (player) => {
-        player.checkGrabbingObjects();
-      });
+      window.game.player.checkGrabbingObjects();
     }
     
   }
