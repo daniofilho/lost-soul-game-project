@@ -74,6 +74,8 @@ class Game extends Phaser.Scene {
     this.floorGroup = null;
     this.wallGroup = null;
     this.teleportGroup = null;
+    this.itemsGroup = null;
+    this.itemsCollectGroup = null;
 
     this.initSound();
   }
@@ -96,7 +98,7 @@ class Game extends Phaser.Scene {
         'assets/scenario/sprites/teleport.png',
         { frameWidth: 32, frameHeight: 32 }
       );
-
+      
     }
 
     create(){
@@ -104,6 +106,8 @@ class Game extends Phaser.Scene {
       this.floorGroup = this.physics.add.staticGroup();
       this.wallGroup = this.physics.add.staticGroup();
       this.teleportGroup = this.physics.add.staticGroup();
+      this.itemsGroup = this.physics.add.staticGroup();
+      this.itemsCollectGroup = this.physics.add.staticGroup();
 
       // Starta
       this.phaserScene = this;
@@ -213,34 +217,7 @@ class Game extends Phaser.Scene {
       }, false);
     }
 
-    // # Keyboard Events
-    window.addEventListener('keydown', function(e) {
-      this.keysDown[e.keyCode] = true;
-    }.bind(this), false);
-
-    window.addEventListener('keyup', function(e) {
-      
-      // Clear previous keys
-      delete this.keysDown[e.keyCode];
-      
-      // Reset players look direction
-      if( this.players) {
-        this.players.map( (player) => {
-          player.resetStep();
-        });
-      }
-      
-      // Player handle keyup
-      if( this.players) {
-        this.players.map( (player) => {
-          player.handleKeyUp(e.keyCode);
-        });
-      }
-
-      // Game Handle keyp
-      this.handleKeyUp(e.keyCode);
-      
-    }.bind(this), false);
+    
 
   }
 
@@ -264,9 +241,10 @@ class Game extends Phaser.Scene {
     this.currentStageName = '';
 
     // Renders
+    /*
     this.renderStatic = null;
     this.renderLayers = null;
-    this.renderUI     = null;
+    this.renderUI     = null;*/
 
   }
 
@@ -304,7 +282,8 @@ class Game extends Phaser.Scene {
    
     // Faz o player colidir com as paredes
       this.phaserScene.physics.add.collider(this.player.player, this.wallGroup); // preciso entender o motivo da variável player (que é a que preciso retornar) está dentro da própria player
-    
+      this.phaserScene.physics.add.collider(this.player.player, this.itemsGroup);
+
     // O que acontece ao colidir com um TP
       this.phaserScene.physics.add.overlap(this.player.player, this.teleportGroup, (_player, teleport) => { this.checkTeleport(_player, teleport) } );
 
@@ -312,7 +291,7 @@ class Game extends Phaser.Scene {
       this.unpause();
     
     // Scenario sound
-      //this.scenarioSound.play();
+      this.scenarioSound.play();
 
     // Flag 
       this.gameIsLoaded = true;
@@ -567,7 +546,20 @@ class Game extends Phaser.Scene {
   // # Run
   run(action) {
     
-    this.cursors = this.input.keyboard.createCursorKeys();
+    // Cria as teclas específicas para controle
+    this.cursors = this.input.keyboard.addKeys(
+      { 
+        'up':   Phaser.Input.Keyboard.KeyCodes.UP, 
+        'down': Phaser.Input.Keyboard.KeyCodes.DOWN,
+        'left': Phaser.Input.Keyboard.KeyCodes.LEFT,
+        'right': Phaser.Input.Keyboard.KeyCodes.RIGHT,
+        'ctrl': Phaser.Input.Keyboard.KeyCodes.CTRL,
+        'shift': Phaser.Input.Keyboard.KeyCodes.SHIFT,
+        'space': Phaser.Input.Keyboard.KeyCodes.SPACE,
+        'esc': Phaser.Input.Keyboard.KeyCodes.ESC
+      }
+    );
+
 
     // Hide Elements
     document.getElementById('mainMenu').classList.remove('show');

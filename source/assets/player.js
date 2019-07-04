@@ -158,16 +158,16 @@ class Player {
       
       // Check if has a "_CanGrab" item colliding with grab hit box and "pick" item
       if( ! this.isGrabing() ) {
-        let object = window.game.collision.justCheck(this, this.getGrabCollisionX(), this.getGrabCollisionY(), this.getGrabCollisionWidth(), this.getGrabCollisionHeight());
-        if( object && object.canGrab ) {
-          if( object.isGrabbed() ) return; // avoid players grabbing the same object
-          object.grabHandler(this.playerNumber);
-          this.grabObject( object );
-        } else {
+        //let object = window.game.collision.justCheck(this, this.getGrabCollisionX(), this.getGrabCollisionY(), this.getGrabCollisionWidth(), this.getGrabCollisionHeight());
+        //if( object && object.canGrab ) {
+        //  if( object.isGrabbed() ) return; // avoid players grabbing the same object
+        //  object.grabHandler(this.playerNumber);
+        //  this.grabObject( object );
+        //} else {
           this.grabSound.play();
-        }
+        //}
         this.grabing = !this.grabing;
-        this.resetStep();
+        //this.resetStep();
       } else {
         if( this.objectGrabbed ) {
           // Drop if has nothing o player grab collision box
@@ -181,10 +181,9 @@ class Player {
         } else {
           this.grabSound.play();
           this.grabing = !this.grabing;
-          this.resetStep();
+          //this.resetStep();
         }
       }
-
     }
 
     // Use items
@@ -337,8 +336,6 @@ class Player {
       this.setY( y );
       this.x0 = x;
       this.y0 = y;
-      //this.collisionX = x + this.CollisionXFormula;
-      //this.collisionY = y + this.CollisionYFormula;
       this.checkGrabbingObjects();
     }
 
@@ -347,72 +344,57 @@ class Player {
     
     getSpeed() { return this.speed; }
 
-    setX(x, setCollision) { 
+    setX(x) { 
       this.x = x; 
       this.player.setX(x);
       this.updateGrabCollisionXY();
-      //if( setCollision ) this.setCollisionX( x + this.CollisionXFormula );
     }
-    setY(y, setCollision) { 
+    setY(y) { 
       this.y = y; 
       this.player.setY(y);
       this.updateGrabCollisionXY();
-      //if( setCollision ) this.setCollisionY( y + this.CollisionYFormula );
     }
     
     setSpeed(speed) { this.speed = this.chunkSize * speed; }
     
 		movLeft(up, down) { 
+      let anim = ( this.grabing ) ? 'left-grab' : 'left';
       this.player.setVelocityX( -1 * this.speed );
       if( !up && !down ) {
-        this.player.anims.play('left', true);
+        this.player.anims.play(anim, true);
         this.spriteProps.direction = 'left';
       }
       this.updateGrabCollisionXY();
-      /*
-      this.increaseStep();
-      this.setLookDirection( this.lookLeft() );
-      this.setX( this.getX() - this.getSpeed()); 
-      this.setCollisionX( this.getCollisionX() - this.getSpeed()); 
-      this.walking = true; */
+      this.walking = true;
     };
 			
 		movRight(up, down) { 
+      let anim = ( this.grabing ) ? 'right-grab' : 'right';
       this.player.setVelocityX( 1 * this.speed );
       if( !up && !down ) {
-        this.player.anims.play('right', true);
+        this.player.anims.play(anim, true);
         this.spriteProps.direction = 'right';
       }
       this.updateGrabCollisionXY();
-      //this.increaseStep();
-      //this.setLookDirection( this.lookRight() );
-      //this.setX( this.getX() + this.getSpeed() ); 
-      //this.setCollisionX( this.getCollisionX() + this.getSpeed());
       this.walking = true;
     };
 			
 		movUp() { 
+      let anim = ( this.grabing ) ? 'up-grab' : 'up';
       this.player.setVelocityY( -1 * this.speed );
-      this.player.anims.play('up', true);
+      this.player.anims.play(anim, true);
       this.spriteProps.direction = 'up';
       this.updateGrabCollisionXY();
-      /*this.increaseStep();
-      this.setLookDirection( this.lookUp() );
-      this.setY( this.getY() - this.getSpeed() ); 
-      this.setCollisionY( this.getCollisionY() - this.getSpeed() );
-      this.walking = true;*/
+      this.walking = true;
     };
 			
 		movDown() {  
+      let anim = ( this.grabing ) ? 'down-grab' : 'down';
       this.player.setVelocityY( 1 * this.speed );
-      this.player.anims.play('down', true);
+      this.player.anims.play(anim, true);
       this.spriteProps.direction = 'down';
       this.updateGrabCollisionXY();
-      /*this.increaseStep();
-      this.setLookDirection( this.lookDown() );
-      this.setY( this.getY() + this.getSpeed() ); 
-      this.setCollisionY( this.getCollisionY() + this.getSpeed() );
-      this.walking = true; */
+      this.walking = true;
     };
 
     iddle() {
@@ -420,21 +402,25 @@ class Player {
       this.player.setVelocityY(0);
       this.walking = false;
       this.walkSound.stop();
+      
+      let anim = 'iddle-up';
 
       switch( this.spriteProps.direction ) {
         case 'up':
-          this.player.anims.play('iddle_up');
+          anim = ( this.grabing ) ? 'iddle-up-grab' : 'iddle-up';
           break;
         case 'down':
-          this.player.anims.play('iddle_down');
+          anim = ( this.grabing ) ? 'iddle-down-grab' : 'iddle-down';
           break;
         case 'left':
-          this.player.anims.play('iddle_left');
+          anim = ( this.grabing ) ? 'iddle-left-grab' : 'iddle-left';
           break;
         case 'right':
-          this.player.anims.play('iddle_right');
+          anim = ( this.grabing ) ? 'iddle-right-grab' : 'iddle-right';
           break;
       }
+      this.walking = false;
+      this.player.anims.play(anim);
     }
 
     createActions() {
@@ -447,10 +433,22 @@ class Player {
         frameRate: 15,
         repeat: -1
       });
+      phaser.anims.create({
+        key: 'down-grab',
+        frames: phaser.anims.generateFrameNumbers('player', { start: 32, end: 39 }),
+        frameRate: 15,
+        repeat: -1
+      });
       
       phaser.anims.create({
         key: 'up',
         frames: phaser.anims.generateFrameNumbers('player', { start: 8, end: 15 }),
+        frameRate: 15,
+        repeat: -1
+      });
+      phaser.anims.create({
+        key: 'up-grab',
+        frames: phaser.anims.generateFrameNumbers('player', { start: 40, end: 47 }),
         frameRate: 15,
         repeat: -1
       });
@@ -461,6 +459,12 @@ class Player {
         frameRate: 15,
         repeat: -1
       });
+      phaser.anims.create({
+        key: 'right-grab',
+        frames: phaser.anims.generateFrameNumbers('player', { start: 48, end: 55 }),
+        frameRate: 15,
+        repeat: -1
+      });
       
       window.game.phaserScene.anims.create({
         key: 'left',
@@ -468,32 +472,61 @@ class Player {
         frameRate: 15,
         repeat: -1
       });
+      window.game.phaserScene.anims.create({
+        key: 'left-grab',
+        frames: phaser.anims.generateFrameNumbers('player', { start: 56, end: 63 }),
+        frameRate: 15,
+        repeat: -1
+      });
 
       phaser.anims.create({
-        key: 'iddle_down',
+        key: 'iddle-down',
         frames: [ { key: 'player', frame: 0 } ],
         frameRate: 10
       });
       phaser.anims.create({
-        key: 'iddle_up',
+        key: 'iddle-down-grab',
+        frames: [ { key: 'player', frame: 32 } ],
+        frameRate: 10
+      });
+
+      phaser.anims.create({
+        key: 'iddle-up',
         frames: [ { key: 'player', frame: 8 } ],
         frameRate: 10
       });
       phaser.anims.create({
-        key: 'iddle_right',
+        key: 'iddle-up-grab',
+        frames: [ { key: 'player', frame: 40 } ],
+        frameRate: 10
+      });
+
+      phaser.anims.create({
+        key: 'iddle-right',
         frames: [ { key: 'player', frame: 16 } ],
         frameRate: 10
       });
       phaser.anims.create({
-        key: 'iddle_left',
+        key: 'iddle-right-grab',
+        frames: [ { key: 'player', frame: 48 } ],
+        frameRate: 10
+      });
+
+      phaser.anims.create({
+        key: 'iddle-left',
         frames: [ { key: 'player', frame: 24 } ],
+        frameRate: 10
+      });
+      phaser.anims.create({
+        key: 'iddle-left-grab',
+        frames: [ { key: 'player', frame: 56 } ],
         frameRate: 10
       });
       
     }
 
     handleKeysEvent( cursors ) {
-     
+      
       let left  = cursors.left.isDown;
       let right = cursors.right.isDown;
       let up    = cursors.up.isDown;
@@ -514,12 +547,13 @@ class Player {
       
       this.speed = (shift) ? this.speed0 *2 : this.speed0;
       
-      /*
-      // Player 1
-      if( this.playerNumber == 1 ) {
-        if (keyUp == 17) this.triggerGrab();  // Grab => CTRL
-        if (keyUp == 32) this.triggerUse();   // Use => Space
-      }*/
+    }
+
+    handleKeyDownEvent() {
+      window.game.phaserScene.input.keyboard.on('keydown', function (e) {
+        if (e.key == 'Control') this.triggerGrab();  // Grab => CTRL
+        if (e.key == ' ') this.triggerUse();   // Use => Space
+      }.bind(this), false);
     }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
@@ -662,8 +696,7 @@ class Player {
       this.updateGrabCollision();
 
       //this.checkGrabbingObjects();
-      
-     
+      this.handleKeyDownEvent(); // Event listener das teclas - KEYDOWN
       
       this.createActions(); // cria as funções de animação
 

@@ -50,8 +50,10 @@ class _Stage {
   // # Add Items to the render
 	addStaticItem(item){
     
+    let frame = ( item.frame ) ? item.frame : 0;
+    
     // Renderiza o asset na tela
-    let asset = window.game.phaserScene.add.image(item.getX(), item.getY(), item.sprite.getSprite() ).setOrigin(0,0).setFrame( item.sprite.getSpriteIndex() ); 
+    let asset = window.game.phaserScene.add.image(item.getX(), item.getY(), item.sprite.getSprite() ).setOrigin(0,0).setFrame( frame ); 
     asset.instance = item;
 
     item.asset = asset;
@@ -69,6 +71,12 @@ class _Stage {
         break;
       case 'teleport':
         window.game.teleportGroup.add(asset);
+        break;
+      case 'items':
+        window.game.itemsGroup.add(asset);
+        break;
+      case 'items-collect':
+        window.game.itemsCollectGroup.add(asset);
         break;
     }
     
@@ -121,9 +129,10 @@ class _Stage {
         if( obj != 0 ) { // avoid empty objects
           obj = parseInt(obj - 1); // Adjust Tiled ID: they add +1 to IDs to allow 0 as a empty tile // #https://discourse.mapeditor.org/t/wrong-ids-in-tileset/1425
           let tileset = this.jsonTileSet.tiles.find( x => x.id === obj ); // Get the index of corresponding id  
-          //console.log(this.coordinates[index].x, this.coordinates[index].y, tileset.properties.find( x => x.name === 'type' ).value);        
+          //console.log(this.coordinates[index].x, this.coordinates[index].y, tileset.properties.find( x => x.name === 'type' ).value);      
           this.stageMap.push( 
             {
+              'id': tileset.id,
               'x': this.coordinates[index].x,
               'y': this.coordinates[index].y,
               'code': obj,
@@ -234,7 +243,7 @@ class _Stage {
 
         default:
           this.addStaticItem(
-            window.game.globalAssets.getAsset( obj.class, { code: obj.type, x0: obj.x, y0: obj.y, stage: obj.stageID }, false ) // false = not from save state
+            window.game.globalAssets.getAsset( obj.class, { code: obj.type, x0: obj.x, y0: obj.y, stage: obj.stageID, frame: obj.id }, false ) // false = not from save state
           );
           break;
       }

@@ -3,7 +3,7 @@ const Sprite = require('../../engine/core/Sprite');
 
 class Wall extends _Collidable {
 
-	constructor(type, x0, y0) {
+	constructor(type, x0, y0, frame) {
     
     let props = {
       name: "Wall",
@@ -30,17 +30,14 @@ class Wall extends _Collidable {
     super(props, position, dimension, sprite, events);
 
     this.group = 'wall';
+    this.frame = frame;
 
   }
 
   // # Sprites
     
   setSpriteType(type) {
-    switch(type) {
-      case "agua-funda":
-        this.sprite.setSpriteIndex(26);
-        break;
-    }
+    // Não há necessidade
   }
 
 }//class

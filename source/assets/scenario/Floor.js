@@ -3,7 +3,7 @@ const Sprite = require('../../engine/core/Sprite');
 
 class Floor extends _Collidable {
 
-	constructor(type, x0, y0) {
+	constructor(type, x0, y0, frame) {
     
     let props = {
       name: "Floor",
@@ -30,24 +30,12 @@ class Floor extends _Collidable {
     super(props, position, dimension, sprite, events);
 
     this.group = 'floor';
+    this.frame = frame;
   } 
 
   // # Sprites  
   setSpriteType(type) {
-    switch(type) {
-      case "areia":
-        this.sprite.setSpriteIndex(0);
-        break;
-      case "agua-rasa":
-        this.sprite.setSpriteIndex(13);
-        break;
-      case "grama":
-        this.sprite.setSpriteIndex(39);
-        break;
-      case "grama-clara":
-        this.sprite.setSpriteIndex(52);
-        break;
-    }
+    // Não há necessidade
   }
 
   collision(player){ 

@@ -26,37 +26,37 @@ class GlobalAssets {
     let r;
     switch( _class ) {
       case 'key':
-        r = new Key( props.code, props.x0, props.y0, props.stage, fromSaveState );
+        r = new Key( props.code, props.x0, props.y0, props.stage, props.frame, fromSaveState );
         break;
       case 'object_throw':
-        r = new Object_Throw( props.code, props.x0, props.y0, props.stage, fromSaveState );
+        r = new Object_Throw( props.code, props.x0, props.y0, props.stage, props.frame, fromSaveState );
         break;
       case "wall":
-        r = new Wall( props.code, props.x0, props.y0 );
+        r = new Wall( props.code, props.x0, props.y0, props.frame );
         break;
       case "floor":
-        r = new Floor( props.code, props.x0, props.y0 );
+        r = new Floor( props.code, props.x0, props.y0, props.frame );
         break;
       case "object_throw":
-        return new Object_Throw( props.code, props.x0, props.y0, props.stageID );
+        return new Object_Throw( props.code, props.x0, props.y0, props.stageID, props.frame );
         break;
       case "object_push":
-        return new Object_Push( props.code, props.x0, props.y0, props.stageID );
+        return new Object_Push( props.code, props.x0, props.y0, props.stageID, props.frame );
         break;
       case "fire":
-        return new Fire( props.code, props.x0, props.y0 );
+        return new Fire( props.code, props.x0, props.y0, props.frame );
         break;
       case "heal":
-        return new Heal( props.code, props.x0, props.y0, props.stageID );
+        return new Heal( props.code, props.x0, props.y0, props.stageID, props.frame );
         break;
       case "door":
-        return new Door( props.code, props.x0, props.y0, props.stageID );
+        return new Door( props.code, props.x0, props.y0, props.stageID, props.frame );
         break;
       case "teleport":
         return new Teleport(props.xIndex, props.yIndex, props.props );
         break;
       case "dialog":
-        return new Dialog(props.x, props.y, props.dialog );
+        return new Dialog(props.x, props.y, props.dialog, props.frame );
         break;
       case "enemy":
         return new Enemy(props.code, props.x0, props.y0, props.stage);

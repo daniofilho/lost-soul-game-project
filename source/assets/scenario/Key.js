@@ -3,7 +3,7 @@ const Sprite = require('../../engine/core/Sprite');
 
 class Key extends _CanThrow {
 
-	constructor(type, x0, y0, stage, fromSaveState) {
+	constructor(type, x0, y0, stage, frame, fromSaveState) {
     
     let props = {
       name: "key",
@@ -22,7 +22,7 @@ class Key extends _CanThrow {
       height: window.game.getChunkSize()
     }
 
-    let sprite = new Sprite(document.getElementById('sprite_beach'), 1980, 1055, 32, 32);
+    let sprite = new Sprite('scenario');
 
     let events = {
       stopOnCollision: true,
@@ -40,6 +40,8 @@ class Key extends _CanThrow {
 
     this.setNeedSaveState(true);
     this.handleProps();
+    this.group = "items";
+    this.frame = frame;
   }
 
   // Check if this item has some save state
@@ -114,19 +116,24 @@ class Key extends _CanThrow {
     switch(type) {
       case "gray":
         this.setCode('gray');
-        this.spriteProps = this.sprite.getSpriteProps(1804);
         break;
-      case "purple":
-        this.setCode('purple');
-        this.spriteProps = this.sprite.getSpriteProps(1805);
-        break;
-      case "red":
-        this.setCode('red');
-        this.spriteProps = this.sprite.getSpriteProps(1806);
+      case "yellow":
+        this.setCode('yellow');
         break;
       case "green":
         this.setCode('green');
-        this.spriteProps = this.sprite.getSpriteProps(1807);
+        break;
+      case "blue":
+        this.setCode('blue');
+        break;
+      case "light-blue":
+        this.setCode('light-blue');
+        break;
+      case "red":
+        this.setCode('red');
+        break;
+      case "orange":
+        this.setCode('orange');
         break;
     }
     

@@ -3,7 +3,7 @@ const Sprite = require('../../engine/core/Sprite');
 
 class Door extends _CanCollect {
 
-	constructor(type, x0, y0, stage) {
+	constructor(type, x0, y0, stage, frame) {
     
     let props = {
       name: "door",
@@ -21,7 +21,7 @@ class Door extends _CanCollect {
       height: window.game.getChunkSize()
     }
 
-    let sprite = new Sprite(document.getElementById('sprite_beach'), 1980, 1055, 32, 32);
+    let sprite = new Sprite('scenario');
 
     let events = {
       stopOnCollision: true,
@@ -40,6 +40,9 @@ class Door extends _CanCollect {
 
     this.handleProps();
     this.initSounds();
+
+    this.group = "items";
+    this.frame = frame;
   }
 
   /*
@@ -67,73 +70,26 @@ class Door extends _CanCollect {
   setSpriteType(type) {
       
     switch(type) {
-      // Gray
-      case "door_gray_bl":
+      case "gray":
         this.setCode('gray');
-        this.spriteProps = this.sprite.getSpriteProps(1313);
         break;
-      case "door_gray_tl":
-        this.setCode('gray');
-        this.spriteProps = this.sprite.getSpriteProps(1251);
+      case "yellow":
+        this.setCode('yellow');
         break;
-      case "door_gray_br":
-        this.setCode('gray');
-        this.spriteProps = this.sprite.getSpriteProps(1314);
-        break;
-      case "door_gray_tr":
-        this.setCode('gray');
-        this.spriteProps = this.sprite.getSpriteProps(1252);
-        break;
-      // Purple
-      case "door_purple_bl":
-        this.setCode('purple');
-        this.spriteProps = this.sprite.getSpriteProps(1315);
-        break;
-      case "door_purple_tl":
-        this.setCode('purple');
-        this.spriteProps = this.sprite.getSpriteProps(1253);
-        break;
-      case "door_purple_br":
-        this.setCode('purple');  
-        this.spriteProps = this.sprite.getSpriteProps(1316);
-        break;
-      case "door_purple_tr":
-        this.setCode('purple');
-        this.spriteProps = this.sprite.getSpriteProps(1254);
-        break;
-      // Red
-      case "door_red_bl":
-        this.setCode('red');
-        this.spriteProps = this.sprite.getSpriteProps(1317);
-        break;
-      case "door_red_tl":
-        this.setCode('red');
-        this.spriteProps = this.sprite.getSpriteProps(1255);
-        break;
-      case "door_red_br":
-        this.setCode('red');
-        this.spriteProps = this.sprite.getSpriteProps(1318);
-        break;
-      case "door_red_tr":
-        this.setCode('red');  
-        this.spriteProps = this.sprite.getSpriteProps(1256);
-        break;
-      // Green
-      case "door_green_bl":
+      case "green":
         this.setCode('green');
-        this.spriteProps = this.sprite.getSpriteProps(1319);
         break;
-      case "door_green_tl":
-        this.setCode('green');  
-        this.spriteProps = this.sprite.getSpriteProps(1257);
+      case "blue":
+        this.setCode('blue');
         break;
-      case "door_green_br":
-        this.setCode('green');  
-        this.spriteProps = this.sprite.getSpriteProps(1320);
+      case "light-blue":
+        this.setCode('light-blue');
         break;
-      case "door_green_tr":
-        this.setCode('green');  
-        this.spriteProps = this.sprite.getSpriteProps(1258);
+      case "red":
+        this.setCode('red');
+        break;
+      case "orange":
+        this.setCode('orange');
         break;
     }
     this.setNeedSaveState(true);
