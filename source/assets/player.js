@@ -32,8 +32,11 @@ class Player {
       this.y0 = 0;
     
     // # Properties
-      this.width = this.chunkSize; //px
-      this.height = this.chunkSize * 2; //px
+      this.width = 32; //px
+      this.height = 64; //px
+
+      this.offsetWidth = 6;
+      this.offsetHeight = 32;
       
       this.speed0 = 160;
       this.speed = this.speed0;
@@ -52,22 +55,18 @@ class Player {
       this.hasCollisionEvent = true;
       this.stopOnCollision = true;
     
-      // # Collision
-      this.collisionWidth = this.width * 0.8;
-      this.collisionHeight = this.height * 0.3;
-      this.CollisionXFormula = this.width * 0.1; // Used to set collision X when setting X 
-      this.CollisionYFormula = this.height * 0.7; 
-      this.collisionX = 0;//this.x0 + this.CollisionXFormula;
-      this.collisionY = 0;//this.y0 + this.CollisionYFormula;
-
       // https://phaser.io/tutorials/coding-tips-005
 
-      this.collisionX0 = this.collisionX;
-      this.collisionY0 = this.collisionY;
+      // Collision
+      this.collisionWidth = 20
+      this.collisionHeight = 32;
 
       // Grab/Pick Items Collision Box
-      this.grabCollisionWidth = 0;
-      this.grabCollisionHeight = 0;
+      this.grabBox = null;
+      this.grabCollisionWidth0 = 10;
+      this.grabCollisionHeight0 = 20;
+      this.grabCollisionWidth = this.grabCollisionWidth0;
+      this.grabCollisionHeight = this.grabCollisionHeight0;
       this.grabCollisionX = 0;
       this.grabCollisionY = 0;
 
@@ -204,6 +203,7 @@ class Player {
       }
     }
 
+    getGrabBox(){ return this.grabBox; }
     getGrabCollisionHeight() { return this.grabCollisionHeight; }
     getGrabCollisionWidth() { return this.grabCollisionWidth; }
     getGrabCollisionX() {  return this.grabCollisionX; }
@@ -216,38 +216,54 @@ class Player {
     }
 
     // Set GrabCollision X and Y considering player look direction
+    updateGrabCollision() {
+      this.updateGrabCollisionXY();
+      this.updateGrabCollisionSize();
+    }
     updateGrabCollisionXY() {
       switch(this.spriteProps.direction) {
         case 'down':
-          this.grabCollisionWidth = this.collisionWidth;
-          this.grabCollisionHeight = this.collisionHeight;
+          this.grabCollisionWidth = this.grabCollisionHeight0;
+          this.grabCollisionHeight = this.grabCollisionWidth0;
+          
 
-          this.grabCollisionX = this.collisionX;
-          this.grabCollisionY = this.collisionY + this.collisionHeight;
+          this.grabBox.setX( this.getX() );
+          this.grabBox.setY( this.getY() + 58 );
+
+          this.updateGrabCollisionSize();
           break;
 
         case  'up':
-          this.grabCollisionWidth = this.collisionWidth;
-          this.grabCollisionHeight = this.collisionHeight;
+          this.grabCollisionWidth = this.grabCollisionHeight0;
+          this.grabCollisionHeight = this.grabCollisionWidth0;
+          
 
-          this.grabCollisionX = this.collisionX;
-          this.grabCollisionY = this.collisionY - this.grabCollisionHeight;
+          this.grabBox.setX( this.getX() );
+          this.grabBox.setY( this.getY() + 5 );
+
+          this.updateGrabCollisionSize();
           break;
         
         case 'left':
-          this.grabCollisionWidth = this.collisionWidth;
-          this.grabCollisionHeight = this.collisionHeight;
+          this.grabCollisionWidth = this.grabCollisionWidth0;
+          this.grabCollisionHeight = this.grabCollisionHeight0;
 
-          this.grabCollisionX = this.collisionX - this.grabCollisionWidth;
-          this.grabCollisionY = this.collisionY;
+
+          this.grabBox.setX( this.getX() - 20 );
+          this.grabBox.setY( this.getY() + this.collisionHeight );
+
+          this.updateGrabCollisionSize();
           break;
         
         case 'right':
-          this.grabCollisionWidth = this.collisionWidth;
-          this.grabCollisionHeight = this.collisionHeight;
+          this.grabCollisionWidth = this.grabCollisionWidth0;
+          this.grabCollisionHeight = this.grabCollisionHeight0;
 
-          this.grabCollisionX = this.collisionX + this.collisionWidth;
-          this.grabCollisionY = this.collisionY;
+
+          this.grabBox.setX( this.getX() + 20 );
+          this.grabBox.setY( this.getY() + this.collisionHeight );
+
+          this.updateGrabCollisionSize();
           break;
       }
 
@@ -260,6 +276,10 @@ class Player {
     updateGrabbedObjectPosition() {
       this.objectGrabbed.updateX( this.getX() );
       this.objectGrabbed.updateY( this.getY() - this.objectGrabbed.getHeight() +  ( this.getHeight() * 0.1 )  );
+    }
+
+    updateGrabCollisionSize(){
+      this.grabBox.setSize( this.grabCollisionWidth, this.grabCollisionHeight );
     }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
@@ -277,7 +297,7 @@ class Player {
 
   // # Controls the player FPS Movement independent of game FPS
     resetStep() {
-      this.stepCount = this.defaultStep;
+      /*this.stepCount = this.defaultStep;
       switch ( this.spriteProps.direction ) {
         case 'left': 
           this.setLookDirection( this.lookLeft() );
@@ -291,7 +311,7 @@ class Player {
         case 'down': 
           this.setLookDirection( this.lookDown() );
           break;
-      }
+      }*/
     }
     
     setLookDirection(lookDirection) { this.lookDirection = lookDirection; }
@@ -322,19 +342,21 @@ class Player {
       this.checkGrabbingObjects();
     }
 
-    getX() { return this.x; }
-    getY() { return this.y; }
+    getX() { return this.player.x; }
+    getY() { return this.player.y; }
     
     getSpeed() { return this.speed; }
 
     setX(x, setCollision) { 
       this.x = x; 
       this.player.setX(x);
+      this.updateGrabCollisionXY();
       //if( setCollision ) this.setCollisionX( x + this.CollisionXFormula );
     }
     setY(y, setCollision) { 
       this.y = y; 
       this.player.setY(y);
+      this.updateGrabCollisionXY();
       //if( setCollision ) this.setCollisionY( y + this.CollisionYFormula );
     }
     
@@ -346,12 +368,12 @@ class Player {
         this.player.anims.play('left', true);
         this.spriteProps.direction = 'left';
       }
+      this.updateGrabCollisionXY();
       /*
       this.increaseStep();
       this.setLookDirection( this.lookLeft() );
       this.setX( this.getX() - this.getSpeed()); 
       this.setCollisionX( this.getCollisionX() - this.getSpeed()); 
-      this.updateGrabCollisionXY();
       this.walking = true; */
     };
 			
@@ -361,12 +383,11 @@ class Player {
         this.player.anims.play('right', true);
         this.spriteProps.direction = 'right';
       }
-
+      this.updateGrabCollisionXY();
       //this.increaseStep();
       //this.setLookDirection( this.lookRight() );
       //this.setX( this.getX() + this.getSpeed() ); 
-      //this.setCollisionX( this.getCollisionX() + this.getSpeed()); 
-      //this.updateGrabCollisionXY();
+      //this.setCollisionX( this.getCollisionX() + this.getSpeed());
       this.walking = true;
     };
 			
@@ -374,12 +395,11 @@ class Player {
       this.player.setVelocityY( -1 * this.speed );
       this.player.anims.play('up', true);
       this.spriteProps.direction = 'up';
-      
+      this.updateGrabCollisionXY();
       /*this.increaseStep();
       this.setLookDirection( this.lookUp() );
       this.setY( this.getY() - this.getSpeed() ); 
       this.setCollisionY( this.getCollisionY() - this.getSpeed() );
-      this.updateGrabCollisionXY();
       this.walking = true;*/
     };
 			
@@ -387,12 +407,11 @@ class Player {
       this.player.setVelocityY( 1 * this.speed );
       this.player.anims.play('down', true);
       this.spriteProps.direction = 'down';
-
+      this.updateGrabCollisionXY();
       /*this.increaseStep();
       this.setLookDirection( this.lookDown() );
       this.setY( this.getY() + this.getSpeed() ); 
       this.setCollisionY( this.getCollisionY() + this.getSpeed() );
-      this.updateGrabCollisionXY();
       this.walking = true; */
     };
 
@@ -508,6 +527,7 @@ class Player {
   /*
     Collision
   */
+    /*
     setCollisionX(x) { this.collisionX = x; }
     setCollisionY(y) { this.collisionY = y; }
 
@@ -539,7 +559,7 @@ class Player {
       
     collision(object) {
       return this.isCollidable;
-    };
+    };*/
 		
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 
@@ -625,15 +645,25 @@ class Player {
       this.player = window.game.phaserScene.physics.add.sprite(0, 0, 'player');
       this.player
         .setOrigin(0, 0)
-        .setSize(20, 32, false)
-        .setOffset(6, 32)  // Move o box definido acima para outra posição
+        .setSize( this.collisionWidth, this.collisionHeight, false)
+        .setOffset( this.offsetWidth, this.offsetHeight)  // Move o box definido acima para outra posição
         .setFrame(0) // Frame inicial do personagem
         .setCollideWorldBounds(true) // Não deixa ele sair fora da tela
         .setDrag(2000); // faz o player "grudar" no chão, o que impede ele de andar eternamente quando aperta uma tecla de movimento
 
+      //Inicia o colision box do player
+      this.grabBox = window.game.phaserScene.physics.add.sprite(0, 0, 'teleport')
+        .setFrame(0)
+        .setOrigin(0, 0)
+        .setSize( this.grabCollisionWidth, this.grabCollisionHeight, false)
+        .setCollideWorldBounds(false)
+        .setDebugBodyColor(199);
+
+      this.updateGrabCollision();
+
       //this.checkGrabbingObjects();
-      //this.lookDirection = this.lookDown();
-      //this.updateGrabCollisionXY();
+      
+     
       
       this.createActions(); // cria as funções de animação
 

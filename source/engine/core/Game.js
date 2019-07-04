@@ -312,7 +312,7 @@ class Game extends Phaser.Scene {
       this.unpause();
     
     // Scenario sound
-      this.scenarioSound.play();
+      //this.scenarioSound.play();
 
     // Flag 
       this.gameIsLoaded = true;
