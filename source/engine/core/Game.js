@@ -287,6 +287,8 @@ class Game extends Phaser.Scene {
     // O que acontece ao colidir com um TP
       this.phaserScene.physics.add.overlap(this.player.player, this.teleportGroup, (_player, teleport) => { this.checkTeleport(_player, teleport) } );
 
+      this.phaserScene.physics.add.overlap(this.player.grabBox, this.itemsGroup, () => { console.log('aa')  } );
+    
     // Make sure the game is not paused
       this.unpause();
     
@@ -308,6 +310,8 @@ class Game extends Phaser.Scene {
 
       if( ! this.gameReady ) return;
       
+      this.player.grabBox.body.debugBodyColor = this.player.grabBox.body.touching.none ? 0x0099ff : 0xff9900;
+
       // # Movements
       this.player.handleKeysEvent( this.cursors );
       
