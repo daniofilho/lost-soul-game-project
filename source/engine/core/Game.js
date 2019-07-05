@@ -287,7 +287,7 @@ class Game extends Phaser.Scene {
     // O que acontece ao colidir com um TP
       this.phaserScene.physics.add.overlap(this.player.player, this.teleportGroup, (_player, teleport) => { this.checkTeleport(_player, teleport) } );
 
-      this.phaserScene.physics.add.overlap(this.player.grabBox, this.itemsGroup, () => { console.log('aa')  } );
+      this.phaserScene.physics.add.overlap(this.player.grabBox, this.itemsGroup );
     
     // Make sure the game is not paused
       this.unpause();

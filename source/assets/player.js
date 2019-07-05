@@ -155,6 +155,8 @@ class Player {
       this.objectGrabbed = false;
     }
     triggerGrab(){
+
+      console.log( window.game.phaserScene.physics.overlap( this.grabBox, window.game.itemsGroup ) );
       
       // Check if has a "_CanGrab" item colliding with grab hit box and "pick" item
       if( ! this.isGrabing() ) {
