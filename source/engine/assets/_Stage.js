@@ -74,6 +74,7 @@ class _Stage {
         break;
       case 'items':
         window.game.itemsGroup.add(asset);
+        asset.body.immovable = true; // Como esse grupo é um grupo dinâmico, precisa dessa linha pra evitar que o objeto seja empurrado ao colidir
         break;
       case 'items-collect':
         window.game.itemsCollectGroup.add(asset);

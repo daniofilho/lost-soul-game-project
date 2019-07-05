@@ -48,6 +48,8 @@ class _Collidable {
     this.originalStage = props.stage;
 
     this.run( props.type );
+
+    this.asset = null; // Phaser Box
   }
 
   // # Code
@@ -58,15 +60,21 @@ class _Collidable {
 
   updateX(x) {
     this.setX(x);
-    this.setCollisionX(x);
+    //this.setCollisionX(x);
   }
   updateY(y) {
     this.setY(y);
-    this.setCollisionY(y);
+    //this.setCollisionY(y);
   }
     
-  setX(x) { this.x = x; }
-  setY(y) { this.y = y; }
+  setX(x) { 
+    this.x = x; 
+    this.asset.setX(x);
+  }
+  setY(y) { 
+    this.y = y; 
+    this.asset.setY(y);
+  }
     
   setHeight(height) { this.height = height; }
   setWidth(width) { this.width = width; }

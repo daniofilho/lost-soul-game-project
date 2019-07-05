@@ -118,7 +118,7 @@ class _CanThrow extends _Collidable {
     switch( this.throwDirection ) {
       case 'up':
         this.targetX = this.getX();  
-        this.targetY = this.getY() - window.game.getChunkSize();
+        this.targetY = this.getY() - window.game.getChunkSize() / 2;
         break;
       case 'down':
         this.targetX = this.getX();  
@@ -140,8 +140,7 @@ class _CanThrow extends _Collidable {
   
   setName(name) { this.name = name; }
 
-  grabHandler( playerNumber ) {
-    this.playerWhoGrabbed = playerNumber;
+  grabHandler() {
     this.setGrab(true);
     this.setStopOnCollision(false); // avoid players pushing other players with items
   }
@@ -164,16 +163,17 @@ class _CanThrow extends _Collidable {
 
   isDropped() { return this.dropped; }
   drop(direction, playerHeight) {
-    
     setTimeout( () => { this.dropSound.play(); }, 300); // Delay drop sound to sync with animation
     this.throwAction = "drop";
     this.calculateDropDirection( direction, playerHeight );
-    this.setDestroyOnAnimationEnd(false);
-    this.setThrowing(true);
+    //this.setDestroyOnAnimationEnd(false);
+    //this.setThrowing(true);
     this.setGrab(false);
-    this.playerWhoGrabbed = false;
     this.dropX = this.targetX;
     this.dropY = this.targetY;
+
+    this.asset.setX( this.dropX );
+    this.asset.setY( this.dropY );
   }
 
   throw(direction, playerHeight, player) {

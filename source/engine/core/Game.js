@@ -106,7 +106,7 @@ class Game extends Phaser.Scene {
       this.floorGroup = this.physics.add.staticGroup();
       this.wallGroup = this.physics.add.staticGroup();
       this.teleportGroup = this.physics.add.staticGroup();
-      this.itemsGroup = this.physics.add.staticGroup();
+      this.itemsGroup = this.physics.add.group(); // dynamic group
       this.itemsCollectGroup = this.physics.add.staticGroup();
 
       // Starta

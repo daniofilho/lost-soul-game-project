@@ -63,8 +63,8 @@ class Player {
 
       // Grab/Pick Items Collision Box
       this.grabBox = null;
-      this.grabCollisionWidth0 = 10;
-      this.grabCollisionHeight0 = 20;
+      this.grabCollisionWidth0 = 20;
+      this.grabCollisionHeight0 = 32;
       this.grabCollisionWidth = this.grabCollisionWidth0;
       this.grabCollisionHeight = this.grabCollisionHeight0;
       this.grabCollisionX = 0;
@@ -156,34 +156,39 @@ class Player {
     }
     triggerGrab(){
 
-      console.log( window.game.phaserScene.physics.overlap( this.grabBox, window.game.itemsGroup ) );
-      
       // Check if has a "_CanGrab" item colliding with grab hit box and "pick" item
       if( ! this.isGrabing() ) {
-        //let object = window.game.collision.justCheck(this, this.getGrabCollisionX(), this.getGrabCollisionY(), this.getGrabCollisionWidth(), this.getGrabCollisionHeight());
-        //if( object && object.canGrab ) {
-        //  if( object.isGrabbed() ) return; // avoid players grabbing the same object
-        //  object.grabHandler(this.playerNumber);
-        //  this.grabObject( object );
-        //} else {
+        var willGrab;
+        // Verifica se está colidindo
+        willGrab = window.game.phaserScene.physics.overlap( this.grabBox, window.game.itemsGroup, ( grabBox, item ) => {
+          if( item.instance.canGrab ) {
+            item.instance.grabHandler();
+            this.grabObject( item.instance );
+            this.grabing = true;
+          } else {
+            willGrab = false;
+          }
+        } );
+       
+        if( !willGrab ) {
           this.grabSound.play();
-        //}
-        this.grabing = !this.grabing;
-        //this.resetStep();
+          this.grabing = !this.grabing;
+        }
+        
       } else {
         if( this.objectGrabbed ) {
           // Drop if has nothing o player grab collision box
-          let object = window.game.collision.justCheckAll(this, this.getGrabCollisionX(), this.getGrabCollisionY(), this.getGrabCollisionWidth(), this.getGrabCollisionHeight());
-          if( !object ) {
+          let overlapingItems = window.game.phaserScene.physics.overlap( this.grabBox, window.game.itemsGroup );
+          let overlapingWalls = window.game.phaserScene.physics.overlap( this.grabBox, window.game.wallGroup );
+          
+          if( !overlapingItems && !overlapingWalls ) {
             this.objectGrabbed.drop( this.spriteProps.direction, this.getHeight() ); // Throw away object
             this.objectGrabbed = false; // remove grabbed
             this.grabing = !this.grabing;
-            this.resetStep();
           }
         } else {
           this.grabSound.play();
           this.grabing = !this.grabing;
-          //this.resetStep();
         }
       }
     }
@@ -194,13 +199,14 @@ class Player {
       if( this.objectGrabbed ) {
         this.objectGrabbed.use( this.spriteProps.direction, this.getHeight(), this );
       } else {
+        /*
         // If not, try to use the one on front
         let object = window.game.collision.justCheck(this, this.getGrabCollisionX(), this.getGrabCollisionY(), this.getGrabCollisionWidth(), this.getGrabCollisionHeight());
         if( object && object.canUse ) {
           object.useHandler( this.spriteProps.direction );
         } else {
           this.useSound.play();
-        }
+        }*/
       }
     }
 
