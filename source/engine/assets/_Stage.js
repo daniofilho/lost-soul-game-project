@@ -56,7 +56,7 @@ class _Stage {
     let asset = window.game.phaserScene.add.image(item.getX(), item.getY(), item.sprite.getSprite() ).setOrigin(0,0).setFrame( frame ); 
     asset.instance = item;
 
-    item.asset = asset;
+    item.setAsset( asset );
     this.renderItems.push(item);
 
     asset.setDepth( this.layerDepth );

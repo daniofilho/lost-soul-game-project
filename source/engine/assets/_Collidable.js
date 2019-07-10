@@ -69,12 +69,19 @@ class _Collidable {
     
   setX(x) { 
     this.x = x; 
-    this.asset.setX(x);
+    if( this.asset ) this.asset.setX(x);
   }
   setY(y) { 
     this.y = y; 
-    this.asset.setY(y);
+    if( this.asset ) this.asset.setY(y);
   }
+
+  setAsset(asset) {
+    this.asset = asset;
+    this.handleProps();
+  }
+
+  handleProps() { }
     
   setHeight(height) { this.height = height; }
   setWidth(width) { this.width = width; }
@@ -94,10 +101,15 @@ class _Collidable {
   }
 
   // # Visibility
+  destroy() {
+    this.asset.destroy();
+  }
   hide() { 
     this.hideSprite = true; 
     this.hasCollisionEvent = false;
     this.stopOnCollision = false;
+    if( this.asset )
+      this.asset.visible = false;
   }
   show() { this.hideSprite = false; }
 
@@ -138,58 +150,7 @@ class _Collidable {
 	// # Render
   render(ctx) {
     
-    this.beforeRender(ctx);
-
-    if ( this.hideSprite ) return;
-
-    let props = {
-      x: this.getX(),
-      y: this.getY(),
-      w: this.getWidth(),
-      h: this.getHeight()
-    } 
-    let spriteProps = this.spriteProps;
-    
-    /*
-    if( this.sprite.getSprite() ) { // Only render texture if it was set before
-      ctx.imageSmoothingEnabled = false;
-      ctx.drawImage(
-        this.sprite.getSprite(),  
-        spriteProps.clip_x, spriteProps.clip_y, 
-        spriteProps.sprite_width, spriteProps.sprite_height, 
-        props.x, props.y, props.w, props.h
-      );
-    }*/
-
-    // Phaser
-    /*
-      window.game.phaserScene.add.image(this.getX(), this.getY(), this.sprite.getSprite() )
-      .setOrigin(0,0)
-      //.setAngle(45)
-      .setFrame( this.sprite.getSpriteIndex() ); //
-      //.setScale( this.sprite.getScaleFactor() ); */
-
-    /* - - */
-    
-    /*
-    //DEBUG Chunk Size
-    if( window.debug ) {
-
-      let collision_props = {
-        w: this.getCollisionWidth(),
-        h: this.getCollisionHeight(),
-        x: this.getCollisionX(),
-        y: this.getCollisionY()
-      }
-
-      ctx.fillStyle = this.stopOnCollision ? "rgba(255,0,0,0.2)" : "rgba(0,255,0,0.2)";
-      ctx.fillRect(collision_props.x, collision_props.y, collision_props.w, collision_props.h);
-      ctx.strokeStyle = "rgba(0,0,0,0.2)";
-      ctx.lineWidth   = 5;
-      ctx.strokeRect(collision_props.x, collision_props.y, collision_props.w, collision_props.h);
-
-    }*/
-  
+    this.beforeRender(ctx);  
   }
     
   // Has a collision Event?

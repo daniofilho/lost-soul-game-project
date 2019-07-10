@@ -38,7 +38,7 @@ class Door extends _CanCollect {
 
     this.openSound = false;
 
-    this.handleProps();
+    //this.handleProps();
     this.initSounds();
 
     this.group = "items";
@@ -54,13 +54,14 @@ class Door extends _CanCollect {
   }
 
   checkSavedItemState() {
-    let savedItemsState = JSON.parse( localStorage.getItem('gufitrupi__itemsState') );  
+    let savedItemsState = JSON.parse( localStorage.getItem('lostsoul__itemsState') );  
     if( savedItemsState ) {
       let itemSavedState = savedItemsState[this.getName()];
       if( itemSavedState && itemSavedState.collected === true ){ // Check if this item is already grabbed
         this.collect();
-        this.hide();
-        this.setStopOnCollision(false);
+        this.asset.visible = false;
+        //this.destroy(); // Essa linha gera um erro do Phaser, então temporariamente estou ocultando este item da tela através do seu X
+        this.setX(-999);
       }
     }  
   }
@@ -104,15 +105,14 @@ class Door extends _CanCollect {
 
   // Open door = hide all doors with same code 
   open() {
-    let objs = window.game.collision.getColItens();
+    let objs = window.game.scenario.getStaticItems();
     for (let i in objs) {
       if( objs[i].type == 'door' ) {
         if( objs[i].getCode() == this.getCode() ) {
           this.openSound.play();
           window.game.playSuccessSound();
           objs[i].collect();
-          objs[i].hide();
-          objs[i].setStopOnCollision(false);
+          objs[i].destroy();
         }
       }
     }

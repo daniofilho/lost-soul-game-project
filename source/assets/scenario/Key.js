@@ -46,7 +46,7 @@ class Key extends _CanThrow {
 
   // Check if this item has some save state
   checkSavedItemState() {
-    let savedItemsState = JSON.parse( localStorage.getItem('gufitrupi__itemsState') );  
+    let savedItemsState = JSON.parse( localStorage.getItem('lostsoul__itemsState') );  
     if( savedItemsState ) {
 
       let itemSavedState = savedItemsState[this.getName()];
@@ -140,7 +140,7 @@ class Key extends _CanThrow {
   }
 
   discardKey(player) {
-    this.hide();
+    this.destroy();
     this.setStopOnCollision(false);
     this.setCollect(true);
     this.setGrab(false);
@@ -148,13 +148,16 @@ class Key extends _CanThrow {
   }
 
   use(direction, playerHeight, player) {
-    let obj = player.checkItemOnGrabCollisionBox();
-    if( obj.type == 'door' ) {
-      if( obj.getCode() == this.getCode() ) {
-        obj.open();
-        this.discardKey(player);
+    window.game.phaserScene.physics.overlap( player.grabBox, window.game.itemsGroup, ( grabBox, obj ) => {
+      if(obj) {
+        if( obj.instance.type == 'door' ) {
+          if( obj.instance.getCode() == this.getCode() ) {
+            obj.instance.open();
+            this.discardKey(player);
+          }
+        }
       }
-    }
+    });
   }
 
 }//class

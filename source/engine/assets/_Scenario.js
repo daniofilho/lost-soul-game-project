@@ -75,12 +75,11 @@ class _Scenario {
   // # Save the State of items
   saveItemsState() {
     // Bottom Layer
-    /*
-    let items = window.game.collision.getColItens();
+    let items = window.game.scenario.getStaticItems();
     for (let i in items) {
       this.handleItemIfNeedSave(items[i]);
     }
-    window.game.saveItemsState();*/
+    window.game.saveItemsState();
   }
 
   handleItemIfNeedSave(item) {

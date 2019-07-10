@@ -47,10 +47,10 @@ class GlobalAssets {
         return new Fire( props.code, props.x0, props.y0, props.frame );
         break;
       case "heal":
-        return new Heal( props.code, props.x0, props.y0, props.stageID, props.frame );
+        return new Heal( props.code, props.x0, props.y0, props.stage, props.frame );
         break;
       case "door":
-        return new Door( props.code, props.x0, props.y0, props.stageID, props.frame );
+        return new Door( props.code, props.x0, props.y0, props.stage, props.frame );
         break;
       case "teleport":
         return new Teleport(props.xIndex, props.yIndex, props.props );
