@@ -76,6 +76,7 @@ class Game extends Phaser.Scene {
     this.teleportGroup = null;
     this.itemsGroup = null;
     this.itemsCollectGroup = null;
+    this.enemyGroup = null;
 
     this.initSound();
   }
@@ -86,6 +87,11 @@ class Game extends Phaser.Scene {
       
       this.load.spritesheet('player', 
         'assets/player-sprite.png',
+        { frameWidth: 32, frameHeight: 64 }
+      );
+      
+      this.load.spritesheet('ghost', 
+        'assets/ghost-sprite.png',
         { frameWidth: 32, frameHeight: 64 }
       );
       
@@ -108,6 +114,7 @@ class Game extends Phaser.Scene {
       this.teleportGroup = this.physics.add.staticGroup();
       this.itemsGroup = this.physics.add.group(); // dynamic group
       this.itemsCollectGroup = this.physics.add.staticGroup();
+      this.enemyGroup = this.physics.add.group();
 
       // Starta
       this.phaserScene = this;
@@ -283,6 +290,7 @@ class Game extends Phaser.Scene {
     // Faz o player colidir com as paredes
       this.phaserScene.physics.add.collider(this.player.player, this.wallGroup); // preciso entender o motivo da variável player (que é a que preciso retornar) está dentro da própria player
       this.phaserScene.physics.add.collider(this.player.player, this.itemsGroup);
+      this.phaserScene.physics.add.collider(this.player.player, this.enemyGroup);
 
     // O que acontece ao colidir com um TP
       this.phaserScene.physics.add.overlap(this.player.player, this.teleportGroup, (_player, teleport) => { this.checkTeleport(_player, teleport) } );
@@ -314,6 +322,11 @@ class Game extends Phaser.Scene {
 
       // # Movements
       this.player.handleKeysEvent( this.cursors );
+
+      // # Enemy AI
+      this.enemyGroup.children.entries.map( (enemy) => {
+        enemy.instance.update();
+      });
       
     }
 

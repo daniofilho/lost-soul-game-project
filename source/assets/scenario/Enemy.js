@@ -17,8 +17,8 @@ class Enemy extends _CanHurt {
     }
 
     let dimension = {
-      width: window.game.getChunkSize(),
-      height: window.game.getChunkSize() * 2
+      width: 32,
+      height: 64
     }
 
     let events = {
@@ -44,7 +44,7 @@ class Enemy extends _CanHurt {
     this.fpsInterval = 1000 / ( window.game.gameProps.fps / 2 ); // 1000 / FPS
     this.deltaTime = Date.now();
 
-    this.sprite = new Sprite( document.getElementById('sprite_enemy'), 300, 960, 20, 40);
+    this.sprite = new Sprite( 'ghost' );
 
     this.step = new Object();
     this.defaultStep = 1;
@@ -64,7 +64,7 @@ class Enemy extends _CanHurt {
   
     // # Properties
     this.speed0 = 0.2;
-    this.speed = this.chunkSize * this.speed0;
+    this.speed = 30;
     this.type = "enemy";
     
     // # Life
@@ -86,6 +86,8 @@ class Enemy extends _CanHurt {
     this.YFromPlayerDistance = 0;
 
     this.deathSound = false;
+
+    this.enemy = null;
 
     this.initSounds();
 
@@ -202,35 +204,43 @@ class Enemy extends _CanHurt {
 
   // # Movement
   movLeft(ignoreCollision) { 
-    this.increaseStep();
+    /*this.increaseStep();
     this.setLookDirection( this.lookLeft() );
     this.setX( this.getX() - this.getSpeed()); 
     this.setCollisionX( this.getCollisionX() - this.getSpeed()); 
-    if( !ignoreCollision ) window.game.checkCollision( this );
+    if( !ignoreCollision ) window.game.checkCollision( this );*/
+
+    this.enemy.body.setVelocityX( -1 * this.speed );
   };
     
   movRight(ignoreCollision) { 
-    this.increaseStep();
+    /*this.increaseStep();
     this.setLookDirection( this.lookRight() );
     this.setX( this.getX() + this.getSpeed() ); 
     this.setCollisionX( this.getCollisionX() + this.getSpeed());
-    if( !ignoreCollision ) window.game.checkCollision( this );
+    if( !ignoreCollision ) window.game.checkCollision( this ); */
+
+    this.enemy.body.setVelocityX( 1 * this.speed );
   };
     
   movUp(ignoreCollision) { 
-    this.increaseStep();
+   /* this.increaseStep();
     this.setLookDirection( this.lookUp() );
     this.setY( this.getY() - this.getSpeed() ); 
     this.setCollisionY( this.getCollisionY() - this.getSpeed() );
-    if( !ignoreCollision ) window.game.checkCollision( this );
+    if( !ignoreCollision ) window.game.checkCollision( this );*/
+
+    this.enemy.body.setVelocityY( -1 * this.speed );
   };
     
   movDown(ignoreCollision) {  
-    this.increaseStep();
+    /*this.increaseStep();
     this.setLookDirection( this.lookDown() );
     this.setY( this.getY() + this.getSpeed() ); 
     this.setCollisionY( this.getCollisionY() + this.getSpeed() );
-    if( !ignoreCollision ) window.game.checkCollision( this );
+    if( !ignoreCollision ) window.game.checkCollision( this );*/
+    this.enemy.body.setVelocityY( 1 * this.speed );
+
   };
   movToDeath(ignoreCollision) {
     this.increaseStep();
@@ -256,11 +266,11 @@ class Enemy extends _CanHurt {
       
   setX(x, setCollision) { 
     this.x = x; 
-    if( setCollision ) this.setCollisionX( x + this.CollisionXFormula );
+    this.enemy.setX(x);
   }
   setY(y, setCollision) { 
     this.y = y; 
-    if( setCollision ) this.setCollisionY( y + this.CollisionYFormula );
+    this.enemy.setY(y);
   }
 
   setCollisionX(x) { this.collisionX = x; }
@@ -390,58 +400,26 @@ class Enemy extends _CanHurt {
     
     if ( this.hideSprite && this.spriteProps.direction != "dying"  ) return;
 
-    // What to do every frame in terms of render? Draw the enemy
-    let props = {
-      x: this.getX(),
-      y: this.getY(),
-      w: this.getWidth(),
-      h: this.getHeight()
-    } 
-    
-    ctx.imageSmoothingEnabled = false;
-    ctx.drawImage(
-      this.sprite.getSprite(),   
-      this.spriteProps.clip_x, this.spriteProps.clip_y, 
-      this.sprite.getKeyWidth(), this.sprite.getKeyHeight(), 
-      props.x, props.y, props.w, props.h
-    );	
 
     // Player Awareness 
     if( this.isAwareOfPlayer() ) {
-      ctx.font =  "50px 'Press Start 2P'";
+     /* ctx.font =  "50px 'Press Start 2P'";
       ctx.fillStyle = "#CC0000";
-      ctx.fillText( "!", this.getX() + ( this.chunkSize * 0.03 ), this.getY() + ( this.chunkSize * 0.3 ) ); 
+      ctx.fillText( "!", this.getX() + ( this.chunkSize * 0.03 ), this.getY() + ( this.chunkSize * 0.3 ) ); */
     }
 
-    // DEBUG COLLISION
-    if( window.debug ) {
-
-      ctx.fillStyle = "rgba(0,0,255, 0.4)";
-      ctx.fillRect( this.getCollisionX(), this.getCollisionY(), this.getCollisionWidth(), this.getCollisionHeight() );
-
-      let text = "X: " + Math.round(this.getX()) + " Y:" + Math.round(this.getY());
-      ctx.font =  "25px 'Press Start 2P'";
-      ctx.fillStyle = "#FFFFFF";
-      ctx.fillText( text, this.getX() - 20, this.getY() - 60); 
-
-      text = "dX: " + Math.round( this.xFromPlayerDistance ) + " dY:" + Math.round( this.YFromPlayerDistance );
-      ctx.font =  "25px 'Press Start 2P'";
-      ctx.fillStyle = "#FFFFFF";
-      ctx.fillText( text, this.getX() - 20, this.getY() - 20); 
-      
-    }
     
   };
 
 // # Enemy Brain
   enemyBrain() {
-
+    
     // Check if enemy is in the same stage as original stage, if not, don't
     if( this.originalStage != window.game.getCurrentStage() ) {
       return false;
     }
 
-    if( window.game.isGameReady() && this.canRenderNextFrame() ) {
+    if( window.game.isGameReady() ) {
       
       // Check Dead behavior/animation
       if( this.isDead() ) {
@@ -460,7 +438,8 @@ class Enemy extends _CanHurt {
       } else { // # Not dead
 
         // Check if it's near enough of player to go in his direction
-        let nearPlayer = false;
+        
+        let nearPlayer = false;/*
         window.game.players.map( (player) => {
           // Check distance between enemy and player
           this.xFromPlayerDistance = Math.abs( this.getCenterX() - player.getCenterX() );
@@ -469,7 +448,7 @@ class Enemy extends _CanHurt {
           if( this.xFromPlayerDistance < this.playerAwareDistance && this.YFromPlayerDistance < this.playerAwareDistance ) {
             nearPlayer = player;
           }
-        });
+        });*/
       
         if( nearPlayer ) {
 
@@ -520,8 +499,8 @@ class Enemy extends _CanHurt {
 
           // Check if stoped the move event
           if( this.directionCountdown <= 0 ) {
-            this.randDirection =  Math.floor(Math.random() * 7) + 1; // 1 - 4
-            this.directionCountdown =  Math.floor(Math.random() * 20) + 10; // 1 - 4
+            this.randDirection =  Math.floor(Math.random() * 10) + 1; // 1 - 10
+            this.directionCountdown =  Math.floor(Math.random() * 4000) + 3800; 
             //this.resetStep();
           }
           
@@ -534,11 +513,14 @@ class Enemy extends _CanHurt {
             case 5: // more chances to don't move
             case 6: 
             case 7: 
-              this.resetStep(); break; // don't move
+            case 8: 
+            case 9: 
+            case 10: 
+              break; // don't move
           }
 
           this.directionCountdown--;
-          
+
         }
       
       } // if dead
@@ -565,10 +547,18 @@ class Enemy extends _CanHurt {
   stopIfCollision() { return this.stopOnCollision; }
 
   runEnemy() {
-    // change look direction
-    this.lookDirection = this.lookDown();
+    this.enemy = window.game.phaserScene.add.image( this.x0, this.y0, 'ghost' ).setOrigin(0,0);
+    window.game.enemyGroup.add(this.enemy); // Adiciona ao grupo global de inimigos
+    this.enemy.body.debugBodyColor = 0xff0000; // Troca a cor de debug
+    this.enemy.instance = this; // Atribue esta classe ao inimigo, para que possam se referenciar depois
 
-    //start algoritm that moves player
+    // Adiciona instruções para colidir com itens e paredes
+    window.game.phaserScene.physics.add.collider(this.enemy, window.game.wallGroup); 
+    window.game.phaserScene.physics.add.collider(this.enemy, window.game.itemsGroup);
+  }
+
+  update() {
+    //start algoritm that moves enemy
     this.enemyBrain();
   }
 

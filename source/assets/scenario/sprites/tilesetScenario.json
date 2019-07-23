@@ -920,6 +920,20 @@
                 }]
         }, 
         {
+         "id":65,
+         "properties":[
+                {
+                 "name":"class",
+                 "type":"string",
+                 "value":"enemy"
+                }, 
+                {
+                 "name":"type",
+                 "type":"string",
+                 "value":"ghost"
+                }]
+        }, 
+        {
          "id":66,
          "properties":[
                 {
