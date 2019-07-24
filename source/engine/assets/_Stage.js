@@ -50,6 +50,9 @@ class _Stage {
   // # Add Items to the render
 	addStaticItem(item){
     
+    // Ignora inimigo, tem sua própria lógica dentro
+    if( item.group == 'enemy' ) return true;
+
     let frame = ( item.frame ) ? item.frame : 0;
     
     // Renderiza o asset na tela
@@ -182,7 +185,7 @@ class _Stage {
 
   loadSavedStateItems() {
     // Check if player has something grabbed and include in render
-    let savedItemsState = localStorage.getItem('gufitrupi__itemsState');  
+    let savedItemsState = localStorage.getItem('lostsoul__itemsState');  
     if( savedItemsState != "{}" ) {
       savedItemsState = JSON.parse(savedItemsState);
       for( let i in savedItemsState ) {

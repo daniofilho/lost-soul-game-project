@@ -65,7 +65,8 @@ class Enemy extends _CanHurt {
     // # Properties
     this.speed0 = 0.2;
     this.speed = 30;
-    this.type = "enemy";
+    this.type = 'enemy';
+    this.group = 'enemy';
     
     // # Life
     this.defaultLifes = 2;
@@ -209,8 +210,8 @@ class Enemy extends _CanHurt {
     this.setX( this.getX() - this.getSpeed()); 
     this.setCollisionX( this.getCollisionX() - this.getSpeed()); 
     if( !ignoreCollision ) window.game.checkCollision( this );*/
-
     this.enemy.body.setVelocityX( -1 * this.speed );
+    this.enemy.body.setVelocityY( 0 );
   };
     
   movRight(ignoreCollision) { 
@@ -219,8 +220,8 @@ class Enemy extends _CanHurt {
     this.setX( this.getX() + this.getSpeed() ); 
     this.setCollisionX( this.getCollisionX() + this.getSpeed());
     if( !ignoreCollision ) window.game.checkCollision( this ); */
-
     this.enemy.body.setVelocityX( 1 * this.speed );
+    this.enemy.body.setVelocityY( 0 );
   };
     
   movUp(ignoreCollision) { 
@@ -229,8 +230,8 @@ class Enemy extends _CanHurt {
     this.setY( this.getY() - this.getSpeed() ); 
     this.setCollisionY( this.getCollisionY() - this.getSpeed() );
     if( !ignoreCollision ) window.game.checkCollision( this );*/
-
     this.enemy.body.setVelocityY( -1 * this.speed );
+    this.enemy.body.setVelocityX( 0 );
   };
     
   movDown(ignoreCollision) {  
@@ -240,7 +241,7 @@ class Enemy extends _CanHurt {
     this.setCollisionY( this.getCollisionY() + this.getSpeed() );
     if( !ignoreCollision ) window.game.checkCollision( this );*/
     this.enemy.body.setVelocityY( 1 * this.speed );
-
+    this.enemy.body.setVelocityX( 0 );
   };
   movToDeath(ignoreCollision) {
     this.increaseStep();
@@ -400,14 +401,12 @@ class Enemy extends _CanHurt {
     
     if ( this.hideSprite && this.spriteProps.direction != "dying"  ) return;
 
-
     // Player Awareness 
     if( this.isAwareOfPlayer() ) {
      /* ctx.font =  "50px 'Press Start 2P'";
       ctx.fillStyle = "#CC0000";
       ctx.fillText( "!", this.getX() + ( this.chunkSize * 0.03 ), this.getY() + ( this.chunkSize * 0.3 ) ); */
     }
-
     
   };
 
